@@ -4,6 +4,7 @@ let BLOGS = [];
 let USERS = [];
 let REVIEWS = [];
 let ADS = [];
+let CATEGORIES = [];
 let NOTIFICATIONS = [];
 let charts = {};
 
@@ -23,15 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchData() {
     try {
-        const [lRes, bRes, uRes] = await Promise.all([
+        const [lRes, bRes, uRes, cRes, rRes] = await Promise.all([
             fetch('/api/admin/listings'),
             fetch('/api/blogs'),
-            fetch('/api/admin/users')
+            fetch('/api/admin/users'),
+            fetch('/api/categories'),
+            fetch('/api/reviews')
         ]);
-        const [lData, bData, uData] = await Promise.all([lRes.json(), bRes.json(), uRes.json()]);
+        const [lData, bData, uData, cData, rData] = await Promise.all([lRes.json(), bRes.json(), uRes.json(), cRes.json(), rRes.json()]);
         
         if (lData.success) LISTINGS = lData.listings;
         if (bData.success) BLOGS = bData.blogs;
+        if (cData.success) CATEGORIES = cData.categories;
+        if (rData.success) REVIEWS = rData.reviews;
         if (uData.success) {
             USERS = uData.users.map(u => ({
                 ...u,
@@ -62,6 +67,7 @@ async function fetchData() {
         renderRecentBlogs();
         renderRecentActivity();
         renderFeaturedRequests();
+        renderCategoriesTable();
         renderUsersTable();
         renderReviewsTable();
         renderAdsTable();
@@ -99,6 +105,48 @@ async function deleteListing(id) {
             fetchData();
         }
     } catch(err) { alert('ডিলিট করতে সমস্যা হয়েছে!'); }
+}
+
+async function handleBlogSubmit(e) {
+    e.preventDefault();
+    const title = document.getElementById('blogTitle').value;
+    const content = document.getElementById('blogContent').value;
+    try {
+        const res = await fetch('/api/blogs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, content })
+        });
+        const data = await res.json();
+        if(data.success) {
+            alert('ব্লগ পাবলিশ হয়েছে!');
+            document.getElementById('blogForm').reset();
+            fetchData();
+        }
+    } catch(err) { alert('ব্লগ পাবলিশ করতে সমস্যা হয়েছে!'); }
+}
+
+async function addCategory() {
+    const name = prompt('ক্যাটাগরির নাম দিন:');
+    if(!name) return;
+    const icon = prompt('আইকন বা ইমোজি দিন (যেমন: 📚):') || '📌';
+    try {
+        const res = await fetch('/api/categories', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, icon })
+        });
+        const data = await res.json();
+        if(data.success) fetchData();
+    } catch(err) { alert('ত্রুটি হয়েছে!'); }
+}
+
+async function deleteCategory(id) {
+    if(!confirm('ক্যাটাগরি ডিলিট করতে চান?')) return;
+    try {
+        const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+        if((await res.json()).success) fetchData();
+    } catch(err) { alert('ত্রুটি হয়েছে!'); }
 }
 
 
@@ -240,6 +288,22 @@ function renderUsersTable() {
     if (window.lucide) lucide.createIcons();
 }
 
+function renderCategoriesTable() {
+    const tbody = document.getElementById('categoriesTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = CATEGORIES.map(c => `
+        <tr>
+            <td style="font-weight:600;">${c.name}</td>
+            <td style="font-size: 1.5rem;">${c.icon}</td>
+            <td>—</td>
+            <td>
+                <button class="icon-btn" style="color:var(--danger);" onclick="deleteCategory('${c._id}')"><i data-lucide="trash-2"></i></button>
+            </td>
+        </tr>
+    `).join('');
+    if (window.lucide) lucide.createIcons();
+}
+
 function renderAdsTable() {
     const tbody = document.getElementById('adsTableBody');
     if (!tbody) return;
@@ -347,17 +411,39 @@ function renderReviewsTable() {
     if (!tbody) return;
     tbody.innerHTML = REVIEWS.map(r => `
         <tr>
-            <td style="font-weight:600;">${r.biz}</td>
-            <td>${r.user}</td>
+            <td style="font-weight:600;">${r.userName || 'Unknown'}</td>
+            <td>${r.userName}</td>
             <td>${'⭐'.repeat(r.rating)}</td>
             <td style="font-size: 0.85rem; color: var(--text-muted);">${r.comment}</td>
-            <td><span class="badge ${r.status === 'Approved' ? 'badge-success' : 'badge-warning'}">${r.status}</span></td>
+            <td><span class="badge ${r.status === 'Approved' ? 'badge-success' : 'badge-warning'}">${r.status === 'Approved' ? 'এপ্রুভড' : 'পেন্ডিং'}</span></td>
             <td>
-                <button class="icon-btn" style="color:var(--danger);"><i data-lucide="trash-2"></i></button>
+                <div style="display:flex; gap: 8px;">
+                    ${r.status === 'Pending' ? `<button class="icon-btn" style="color:var(--success);" onclick="approveReview('${r._id}')"><i data-lucide="check-circle"></i></button>` : ''}
+                    <button class="icon-btn" style="color:var(--danger);" onclick="deleteReview('${r._id}')"><i data-lucide="trash-2"></i></button>
+                </div>
             </td>
         </tr>
-    `);
+    `).join('');
     if (window.lucide) lucide.createIcons();
+}
+
+async function approveReview(id) {
+    try {
+        const res = await fetch(`/api/reviews/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'Approved' })
+        });
+        if((await res.json()).success) fetchData();
+    } catch(err) { alert('ত্রুটি হয়েছে!'); }
+}
+
+async function deleteReview(id) {
+    if(!confirm('রিভিউটি ডিলিট করতে চান?')) return;
+    try {
+        const res = await fetch(`/api/reviews/${id}`, { method: 'DELETE' });
+        if((await res.json()).success) fetchData();
+    } catch(err) { alert('ত্রুটি হয়েছে!'); }
 }
 
 function renderRecentBlogs() {

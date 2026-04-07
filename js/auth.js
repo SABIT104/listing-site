@@ -62,7 +62,33 @@ const Auth = {
         }
     },
 
-    // 4. Logout user
+    // 4. Update user profile
+    updateProfile: async function(id, name, phone, password) {
+        try {
+            const body = {};
+            if(name) body.name = name;
+            if(phone) body.phone = phone;
+            if(password) body.password = password;
+
+            const res = await fetch(`/api/users/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if(data.success) {
+                const session = this.getSession();
+                session.name = data.user.name;
+                localStorage.setItem('bb_session', JSON.stringify(session));
+                return { success: true };
+            }
+            return { success: false, message: 'আপডেট ব্যর্থ হয়েছে।' };
+        } catch(err) {
+            return { success: false, message: 'সার্ভার এরর।' };
+        }
+    },
+
+    // 5. Logout user
     logout: function() {
         localStorage.removeItem('bb_session');
         const isSubfolder = window.location.pathname.includes('/auth/') || 

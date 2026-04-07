@@ -6,6 +6,7 @@
     <title>ইউজার ড্যাশবোর্ড - BusinessBangla</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/variables.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --sidebar-width: 250px; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -132,6 +133,7 @@
         <ul class="nav-menu">
             <li class="nav-item active">📊 ওভারভিউ</li>
             <li class="nav-item" onclick="window.location.href='../listings/add-listing.html'">➕ নতুন বিজ্ঞাপন</li>
+            <li class="nav-item" onclick="openProfileModal()">⚙️ প্রোফাইল সেটিংস</li>
             <li class="nav-item" onclick="window.location.href='../index.html'">🏠 সাইটে ফিরুন</li>
             <li class="nav-item" onclick="Auth.logout()" style="margin-top:auto; color:#ff8a80;">🚪 লগআউট</li>
         </ul>
@@ -166,6 +168,16 @@
             </div>
         </div>
 
+        <!-- Performance Chart -->
+        <div class="section-card" style="margin-bottom: 35px;">
+            <div class="section-header">
+                <h4>📈 লিস্টিং পারফরম্যান্স (ভিজিটর)</h4>
+            </div>
+            <div style="height: 300px;">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
         <!-- My Listings -->
         <div class="section-card">
             <div class="section-header">
@@ -195,6 +207,23 @@
         </div>
     </div>
 
+    <!-- Profile Edit Modal -->
+    <div id="profileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="modal-card">
+            <h2>⚙️ প্রোফাইল আপডেট</h2>
+            <label>নাম</label>
+            <input type="text" id="profName" placeholder="আপনার নাম">
+            <label>ফোন নম্বর</label>
+            <input type="text" id="profPhone" placeholder="ফোন নম্বর">
+            <label>নতুন পাসওয়ার্ড (ঐচ্ছিক)</label>
+            <input type="password" id="profPass" placeholder="নতুন পাসওয়ার্ড (যদি পরিবর্তন করতে চান)">
+            <div class="modal-actions">
+                <button class="btn-save" onclick="saveProfile()">💾 সেভ করুন</button>
+                <button class="btn-cancel" onclick="closeProfileModal()">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/auth.js"></script>
     <script>
         let userListings = [];
@@ -219,6 +248,7 @@
                     userListings = data.listings;
                     renderStats();
                     renderListingsTable();
+                    initPerformanceChart();
                 } else {
                     showEmpty('লিস্টিং লোড করতে সমস্যা হয়েছে।');
                 }
@@ -330,6 +360,68 @@
 
         function closeModal() {
             document.getElementById('updateModal').style.display = 'none';
+        }
+
+        function openProfileModal() {
+            const session = Auth.getSession();
+            if(session) {
+                document.getElementById('profName').value = session.name || '';
+                document.getElementById('profileModal').style.display = 'flex';
+            }
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        async function saveProfile() {
+            const session = Auth.getSession();
+            if(!session) return;
+            
+            const name = document.getElementById('profName').value.trim();
+            const phone = document.getElementById('profPhone').value.trim();
+            const password = document.getElementById('profPass').value.trim();
+            
+            if(!name) return alert('নাম ফাঁকা রাখা যাবে না!');
+            
+            const res = await Auth.updateProfile(session.id, name, phone, password);
+            if(res.success) {
+                alert('প্রোফাইল সফলভাবে আপডেট হয়েছে!');
+                document.getElementById('userName').innerText = `স্বাগতম, ${name}! 👋`;
+                document.getElementById('sidebarName').innerText = name;
+                Auth.syncNavbar();
+                closeProfileModal();
+            } else {
+                alert(res.message);
+            }
+        }
+
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['শনিবার', 'রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার'],
+                    datasets: [{
+                        label: 'ভিউস (Views)',
+                        data: [12, 19, 3, 5, 2, 3, 7],
+                        borderColor: '#1B6B3A',
+                        backgroundColor: 'rgba(27, 107, 58, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
         }
     </script>
 </body>

@@ -207,17 +207,18 @@
 
                 <!-- OTHER TABS -->
                 <div id="tab-categories" class="tab-panel">
-                    <h1 class="page-title">ক্যাটাগরি ম্যানেজমেন্ট</h1>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h1 class="page-title" style="margin-bottom: 0;">ক্যাটাগরি ম্যানেজমেন্ট</h1>
+                        <button class="btn btn-primary" onclick="addCategory()">+ নতুন ক্যাটাগরি</button>
+                    </div>
                     <div class="glass-card">
                         <div class="table-wrapper">
                             <table>
                                 <thead>
                                     <tr><th>ক্যাটাগরি</th><th>আইকন</th><th>লিস্টিং সংখ্যা</th><th>অ্যাকশন</th></tr>
                                 </thead>
-                                <tbody>
-                                    <tr><td>খাবার</td><td>🍛</td><td>২৪</td><td><button class="btn btn-ghost">ইডিট</button></td></tr>
-                                    <tr><td>স্বাস্থ্য</td><td>🏥</td><td>১২</td><td><button class="btn btn-ghost">ইডিট</button></td></tr>
-                                    <tr><td>শিক্ষা</td><td>📚</td><td>১৮</td><td><button class="btn btn-ghost">ইডিট</button></td></tr>
+                                <tbody id="categoriesTableBody">
+                                    <!-- Populated dynamically -->
                                 </tbody>
                             </table>
                         </div>

@@ -25,16 +25,22 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 }
 
 if (!fs.existsSync(DB_PATH)) {
-  fs.writeFileSync(DB_PATH, JSON.stringify({ users: [], listings: [], blogs: [] }, null, 2), 'utf8');
+  fs.writeFileSync(DB_PATH, JSON.stringify({ users: [], listings: [], blogs: [], categories: [], reviews: [] }, null, 2), 'utf8');
 }
 
 function readDB() {
   try {
     const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     if (!db.blogs) db.blogs = [];
+    if (!db.categories) db.categories = [
+      { _id: 'cat1', name: 'খাবার', icon: '🍛' },
+      { _id: 'cat2', name: 'স্বাস্থ্য', icon: '🏥' },
+      { _id: 'cat3', name: 'শিক্ষা', icon: '📚' }
+    ];
+    if (!db.reviews) db.reviews = [];
     return db;
   } catch {
-    return { users: [], listings: [], blogs: [] };
+    return { users: [], listings: [], blogs: [], categories: [], reviews: [] };
   }
 }
 
@@ -253,6 +259,71 @@ app.get('/api/admin/users', (req, res) => {
   }
 });
 
+// 10.1 Update User Profile
+app.put('/api/users/:id', (req, res) => {
+  try {
+    const db = readDB();
+    const idx = db.users.findIndex(u => u._id === req.params.id);
+    if (idx === -1) return res.status(404).json({ success: false, message: 'ইউজার পাওয়া যায়নি!' });
+    
+    // Only update allowed fields
+    if (req.body.name) db.users[idx].name = req.body.name;
+    if (req.body.phone) db.users[idx].phone = req.body.phone;
+    if (req.body.password) db.users[idx].password = req.body.password;
+    
+    writeDB(db);
+    res.json({ success: true, user: { id: db.users[idx]._id, name: db.users[idx].name, email: db.users[idx].email } });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+// 10.2 Category APIs
+app.get('/api/categories', (req, res) => {
+  try {
+    const db = readDB();
+    res.json({ success: true, categories: db.categories || [] });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.post('/api/categories', (req, res) => {
+  try {
+    const db = readDB();
+    const cat = { _id: newId(), name: req.body.name || '', icon: req.body.icon || '📌' };
+    db.categories.push(cat);
+    writeDB(db);
+    res.status(201).json({ success: true, category: cat });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.put('/api/categories/:id', (req, res) => {
+  try {
+    const db = readDB();
+    const idx = db.categories.findIndex(c => c._id === req.params.id);
+    if (idx === -1) return res.status(404).json({ success: false });
+    db.categories[idx] = { ...db.categories[idx], ...req.body, _id: req.params.id };
+    writeDB(db);
+    res.json({ success: true, category: db.categories[idx] });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.delete('/api/categories/:id', (req, res) => {
+  try {
+    const db = readDB();
+    db.categories = db.categories.filter(c => c._id !== req.params.id);
+    writeDB(db);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
 // 11. BLOG APIs
 app.get('/api/blogs', (req, res) => {
   try {
@@ -306,6 +377,61 @@ app.delete('/api/blogs/:id', (req, res) => {
   try {
     const db = readDB();
     db.blogs = db.blogs.filter(b => b._id !== req.params.id);
+    writeDB(db);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+// 13. Review APIs
+app.get('/api/reviews', (req, res) => {
+  try {
+    const db = readDB();
+    res.json({ success: true, reviews: db.reviews || [] });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.post('/api/reviews', (req, res) => {
+  try {
+    const db = readDB();
+    const review = {
+      _id: newId(),
+      listingId: req.body.listingId,
+      userId: req.body.userId,
+      userName: req.body.userName,
+      rating: req.body.rating || 5,
+      comment: req.body.comment || '',
+      status: 'Pending',
+      createdAt: new Date().toISOString()
+    };
+    db.reviews.push(review);
+    writeDB(db);
+    res.status(201).json({ success: true, review });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.put('/api/reviews/:id', (req, res) => {
+  try {
+    const db = readDB();
+    const idx = db.reviews.findIndex(r => r._id === req.params.id);
+    if (idx === -1) return res.status(404).json({ success: false });
+    db.reviews[idx] = { ...db.reviews[idx], ...req.body, _id: req.params.id };
+    writeDB(db);
+    res.json({ success: true, review: db.reviews[idx] });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.delete('/api/reviews/:id', (req, res) => {
+  try {
+    const db = readDB();
+    db.reviews = db.reviews.filter(r => r._id !== req.params.id);
     writeDB(db);
     res.json({ success: true });
   } catch (err) {
