@@ -95,23 +95,35 @@ function renderListings(arr, containerId = 'listingList') {
   });
 }
 
-function renderPagination(totalCount) {
+function renderPagination(totalCount, currentPage = 1, pageSize = 20) {
   const pag = document.getElementById('pagination');
   if (!pag) return;
   
-  if (totalCount === 0) {
+  const totalPages = Math.ceil(totalCount / pageSize);
+  if (totalPages <= 1) {
     pag.innerHTML = '';
     return;
   }
   
-  // Hardcoded for demo
-  pag.innerHTML = `
-    <button class="page-btn">‹</button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <button class="page-btn">›</button>
-  `;
+  let html = '';
+  
+  // Previous Button
+  html += `<button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="${currentPage > 1 ? `gotoPage(${currentPage - 1})` : ''}">‹</button>`;
+  
+  // Page Numbers (Simplified logic: show first, last, and current +/- 2)
+  const range = 2;
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= currentPage - range && i <= currentPage + range)) {
+      html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="gotoPage(${i})">${toBengaliNumeral(i)}</button>`;
+    } else if (i === currentPage - range - 1 || i === currentPage + range + 1) {
+      html += `<span class="page-dots">...</span>`;
+    }
+  }
+  
+  // Next Button
+  html += `<button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="${currentPage < totalPages ? `gotoPage(${currentPage + 1})` : ''}">›</button>`;
+  
+  pag.innerHTML = html;
 }
 
 function toBengaliNumeral(num) {

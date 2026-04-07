@@ -383,16 +383,26 @@
           <button type="submit" class="auth-btn" style="background:#555; color:#fff;">লগইন করুন</button>
         </form>
 
+        <script src="../js/auth.js"></script>
         <script>
-          function handleAdminLogin(e) {
+          async function handleAdminLogin(e) {
             e.preventDefault();
             const user = document.getElementById('adminUser').value;
             const pass = document.getElementById('adminPass').value;
             
-            if (user === 's@bit' && pass === 's@bit104') {
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'যাচাই হচ্ছে...';
+            btn.disabled = true;
+
+            const result = await Auth.login(user, pass, true); // isAdmin=true
+            
+            if (result.success) {
               window.location.href = '../dashboard/admin-dashboard.html';
             } else {
-              alert('ভুল ইউজারনেম অথবা পাসওয়ার্ড! আবার চেষ্টা করুন।');
+              alert(result.message || 'ভুল ইউজারনেম অথবা পাসওয়ার্ড!');
+              btn.innerText = originalText;
+              btn.disabled = false;
             }
           }
         </script>

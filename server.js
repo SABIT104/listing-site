@@ -164,15 +164,38 @@ app.get('/api/listings/user/:userId', (req, res) => {
   }
 });
 
-// 6. Get All Approved Listings
+// 6. Get All Approved Listings (with multi-field search)
 app.get('/api/listings', (req, res) => {
   try {
     const db = readDB();
     let listings = db.listings.filter(l => l.isLive === true);
+
     if (req.query.category) {
       listings = listings.filter(l => l.category === req.query.category);
     }
-    listings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if (req.query.division) {
+      listings = listings.filter(l => l.division === req.query.division);
+    }
+
+    if (req.query.q) {
+      const q = req.query.q.toLowerCase().trim();
+      listings = listings.filter(l =>
+        (l.name && l.name.toLowerCase().includes(q)) ||
+        (l.category && l.category.toLowerCase().includes(q)) ||
+        (l.area && l.area.toLowerCase().includes(q)) ||
+        (l.district && l.district.toLowerCase().includes(q)) ||
+        (l.description && l.description.toLowerCase().includes(q)) ||
+        (l.tags && l.tags.toLowerCase().includes(q))
+      );
+    }
+
+    listings.sort((a, b) => {
+      // Featured/premium listings first, then by date
+      if (b.featured !== a.featured) return b.featured ? 1 : -1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
     res.json({ success: true, listings });
   } catch (err) {
     res.status(500).json({ success: false });

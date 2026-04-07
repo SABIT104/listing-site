@@ -130,9 +130,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         countEl.textContent = toBengaliNumeral(divCount);
       }
     });
+
+    // 5. Hero Stats (Homepage count-num)
+    const counters = document.querySelectorAll('.count-num');
+    counters.forEach(counter => {
+      const label = counter.parentElement.textContent || '';
+      let target = 0;
+      if (label.includes('লিস্টিং')) target = LISTINGS.length;
+      else if (label.includes('বিভাগ')) target = 8; // Constant divisions
+      else if (label.includes('ক্যাটাগরি')) target = new Set(LISTINGS.map(l => l.category)).size;
+      else if (label.includes('যাচাইকৃত')) target = 98; // Placeholder
+
+      if (target > 0) {
+        counter.setAttribute('data-val', target);
+        // If the index.html script already started, we need to restart it or just set value
+        counter.innerText = toBengaliNumeral(target);
+      }
+    });
   }
 
-  updateDynamicCounts();
+  // Update counts immediately if data exists, otherwise wait
+  if (LISTINGS.length > 0) updateDynamicCounts();
+  window.addEventListener('dataReady', updateDynamicCounts);
 
   // 1. Navbar Search Binding
   const headerSearchBtn = document.getElementById('headerSearchBtn');
@@ -184,12 +203,35 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   if (isListingsPage) {
     
+    let currentPage = 1;
+    const pageSize = 20;
+
     const applyAndRender = () => {
-      // For now we still use local filtering for ease, but on the fetched server data
+      // 1. Filter
       const filtered = filterListings(currentFilters, LISTINGS); 
-      renderListings(filtered, 'listingList');
-      renderPagination(filtered.length);
-      renderCount(filtered.length);
+      
+      // 2. Pagination Logic
+      const totalCount = filtered.length;
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const paginated = filtered.slice(startIndex, endIndex);
+
+      // 3. Render
+      renderListings(paginated, 'listingList');
+      renderPagination(totalCount, currentPage, pageSize);
+      renderCount(totalCount);
+      
+      // Scroll to top of list for UX
+      if (currentPage > 1) {
+          const listTop = document.getElementById('listingList').offsetTop;
+          window.scrollTo({ top: listTop - 150, behavior: 'smooth' });
+      }
+    };
+
+    // Global go-to-page function
+    window.gotoPage = (n) => {
+      currentPage = n;
+      applyAndRender();
     };
 
     // Sidebar Accordion Logic
@@ -206,6 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       allDivBtn.addEventListener('click', () => {
         currentFilters.division = 'all';
         currentFilters.district = null;
+        currentPage = 1; // Reset to page 1
         applyAndRender();
       });
     }
@@ -215,6 +258,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         currentFilters.district = link.textContent.trim();
+        currentPage = 1; // Reset to page 1
         // Extract division from parent accordion if needed
         applyAndRender();
       });
@@ -225,6 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ratingRadios.forEach(radio => {
       radio.addEventListener('change', (e) => {
         currentFilters.minRating = parseFloat(e.target.value);
+        currentPage = 1; // Reset to page 1
         applyAndRender();
       });
     });
@@ -244,6 +289,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (el) {
         el.addEventListener('change', (e) => {
           currentFilters[b.key] = e.target.checked;
+          currentPage = 1; // Reset to page 1
           applyAndRender();
         });
       }

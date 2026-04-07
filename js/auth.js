@@ -10,40 +10,56 @@ const Auth = {
         return session ? JSON.parse(session) : null;
     },
 
-    // 2. Register a new user
-    register: function(name, email, password) {
-        const users = JSON.parse(localStorage.getItem('bb_users') || '[]');
-        
-        // Check if user already exists
-        if (users.find(u => u.email === email)) {
-            return { success: false, message: 'এই ইমেইলটি ইতিপূর্বে ব্যবহৃত হয়েছে।' };
+    // 2. Register a new user via API
+    register: async function(name, email, password) {
+        try {
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                // Auto-login after successful registration
+                return await this.login(email, password);
+            } else {
+                return { success: false, message: data.message || 'নিবন্ধনে সমস্যা হয়েছে।' };
+            }
+        } catch (err) {
+            console.error('Registration error:', err);
+            return { success: false, message: 'সার্ভারের সাথে সংযোগ বিচ্ছিন্ন হয়েছে।' };
         }
-
-        const newUser = { id: Date.now(), name, email, password, registeredAt: new Date().toISOString() };
-        users.push(newUser);
-        localStorage.setItem('bb_users', JSON.stringify(users));
-        
-        // Auto-login after register
-        this.login(email, password);
-        return { success: true, message: 'অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!' };
     },
 
-    // 3. Login user
-    login: function(email, password) {
-        const users = JSON.parse(localStorage.getItem('bb_users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
+    // 3. Login user via API
+    login: async function(email, password, isAdmin = false) {
+        try {
+            const url = isAdmin ? '/api/admin/login' : '/api/login';
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
 
-        if (user) {
-            const session = { 
-                id: user.id, 
-                name: user.name, 
-                email: user.email, 
-                loginAt: new Date().toISOString() 
-            };
-            localStorage.setItem('bb_session', JSON.stringify(session));
-            return { success: true };
+            if (data.success) {
+                const session = { 
+                    id: data.user ? data.user.id : 'admin', 
+                    name: data.user ? data.user.name : (data.name || 'Admin'), 
+                    email: email, 
+                    role: isAdmin ? 'admin' : (data.user ? (data.user.role || 'user') : 'user'),
+                    loginAt: new Date().toISOString() 
+                };
+                localStorage.setItem('bb_session', JSON.stringify(session));
+                return { success: true };
+            } else {
+                return { success: false, message: data.message || 'ভুল ইমেইল অথবা পাসওয়ার্ড!' };
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+            return { success: false, message: 'সার্ভারের সাথে সংযোগ বিচ্ছিন্ন হয়েছে।' };
         }
-        return { success: false, message: 'ভুল ইমেইল অথবা পাসওয়ার্ড!' };
     },
 
     // 4. Logout user

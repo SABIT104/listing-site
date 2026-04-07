@@ -551,19 +551,26 @@
         <script src="../js/auth.js"></script>
         <script>
           const loginForm = document.querySelector('form');
-          loginForm.addEventListener('submit', (e) => {
+          loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-password').value;
             
-            const result = Auth.login(email, pass);
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'লগইন হচ্ছে...';
+            btn.disabled = true;
+
+            const result = await Auth.login(email, pass);
+            
             if (result.success) {
-                // If there's a redirect in the URL, go there (e.g. add-listing.html)
                 const urlParams = new URLSearchParams(window.location.search);
-                const redirect = urlParams.get('redirect') || '../dashboard/user-dashboard.html';
+                const redirect = urlParams.get('redirect') || '../index.html';
                 window.location.href = redirect;
             } else {
                 alert(result.message || 'ভুল ইমেইল অথবা পাসওয়ার্ড!');
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
           });
         </script>

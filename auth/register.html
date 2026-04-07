@@ -554,19 +554,25 @@
         <script src="../js/auth.js"></script>
         <script>
           const regForm = document.querySelector('form');
-          regForm.addEventListener('submit', (e) => {
+          regForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
-            const phone = document.getElementById('reg-phone').value;
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-password').value;
             
-            const result = Auth.register(name, email, pass);
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'অ্যাকাউন্ট তৈরি হচ্ছে...';
+            btn.disabled = true;
+
+            const result = await Auth.register(name, email, pass);
             if (result.success) {
-                alert(result.message);
-                window.location.href = '../dashboard/user-dashboard.html';
+                alert('অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
+                window.location.href = '../index.html';
             } else {
-                alert(result.message);
+                alert(result.message || 'নিবন্ধনে সমস্যা হয়েছে।');
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
           });
         </script>

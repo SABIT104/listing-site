@@ -267,55 +267,73 @@
   <script src="../js/auth.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Protect this page - must be logged in
       Auth.protectPage();
+      Auth.syncNavbar();
 
       const descInput = document.getElementById('descInput');
       const charCount = document.getElementById('charCount');
-      
-      descInput.addEventListener('input', () => {
-        charCount.textContent = descInput.value.length;
-      });
+      descInput.addEventListener('input', () => { charCount.textContent = descInput.value.length; });
 
       const form = document.getElementById('addListingForm');
       const msg = document.getElementById('successMsg');
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        // Simulation: Save to localStorage for the current user
+
         const session = Auth.getSession();
-        const userListings = JSON.parse(localStorage.getItem(`bb_listings_${session.id}`) || '[]');
-        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.innerText = 'যোগ করা হচ্ছে...';
+        submitBtn.disabled = true;
+
+        const controls = form.querySelectorAll('.form-control');
         const newListing = {
-            id: Date.now(),
-            name: form.querySelector('input[type="text"]').value,
-            category: form.querySelectorAll('select')[0].value,
-            division: form.querySelectorAll('select')[1].value,
-            district: form.querySelector('input[placeholder="যেমন: ঢাকা সদর"]').value,
-            address: form.querySelector('textarea[required]').value,
-            phone: form.querySelector('input[type="tel"]').value,
-            status: 'Pending', // New listings are pending by default
-            isLive: false,
+            userId:   session.id,
+            name:     controls[0].value,
+            category: controls[1].value,
+            division: controls[2].value,
+            district: controls[3]?.value || '',
+            address:  controls[4]?.value || '',
+            phone:    controls[5]?.value || '',
+            website:  controls[6]?.value || '',
+            email:    controls[7]?.value || '',
+            description: document.getElementById('descInput').value,
+            icon:     '🏢',
+            isLive:   false,
+            verified: false,
             featured: false,
-            views: 0,
-            addedAt: new Date().toISOString()
+            rating:   0,
+            reviews:  0,
+            views:    0
         };
-        
-        userListings.push(newListing);
-        localStorage.setItem(`bb_listings_${session.id}`, JSON.stringify(userListings));
 
-        form.style.display = 'none';
-        msg.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        try {
+            const res = await fetch('/api/listings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newListing)
+            });
+            const data = await res.json();
 
-        // Redirect to dashboard after 2 seconds
-        setTimeout(() => {
-            window.location.href = 'user-dashboard.html';
-        }, 2000);
+            if (data.success) {
+                form.style.display = 'none';
+                msg.innerText = '✅ আপনার বিজনেস সফলভাবে যোগ করা হয়েছে! অ্যাডমিন রিভিউয়ের পর এটি লাইভ হবে।';
+                msg.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setTimeout(() => { window.location.href = '../dashboard/user-dashboard.html'; }, 2500);
+            } else {
+                alert('লিস্টিং যোগ করতে সমস্যা হয়েছে: ' + (data.message || ''));
+                submitBtn.innerText = 'বিজনেস যোগ করুন';
+                submitBtn.disabled = false;
+            }
+        } catch (err) {
+            alert('সার্ভারের সাথে সংযোগ বিচ্ছিন্ন।');
+            submitBtn.innerText = 'বিজনেস যোগ করুন';
+            submitBtn.disabled = false;
+        }
       });
     });
   </script>
+
 </body>
 </html>
 
