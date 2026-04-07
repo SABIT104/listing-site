@@ -265,10 +265,10 @@
                             <div class="table-wrapper">
                                 <table>
                                     <thead>
-                                        <tr><th>বিজনেস</th><th>প্ল্যান</th><th>মেয়াদ</th><th>কস্ট</th><th>অ্যাকশন</th></tr>
+                                        <tr><th>ব্যবসা</th><th>প্ল্যান</th><th>মেয়াদ</th><th>খরচ</th><th>অ্যাকশন</th></tr>
                                     </thead>
                                     <tbody id="adsTableBody">
-                                        <!-- Populated by JS -->
+                                        <!-- Populated dynamically -->
                                     </tbody>
                                 </table>
                             </div>
@@ -307,10 +307,7 @@
                 </div>
 
                 <div id="tab-analytics" class="tab-panel">
-                    <h1 class="page-title">বিস্তারিত এনালাইটিক্স</h1>
-                    <div class="glass-card" style="height: 500px;">
-                        <p style="color: var(--text-muted);">বিস্তারিত চার্ট এবং রিপোর্ট এখানে দেখা যাবে।</p>
-                    </div>
+                    <!-- Populated dynamically logic in admin.js -->
                 </div>
 
                 <div id="tab-settings" class="tab-panel">
@@ -318,9 +315,13 @@
                     <div class="glass-card" style="max-width: 600px;">
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; margin-bottom: 0.5rem;">সাইট টাইটেল</label>
-                            <input type="text" value="BusinessBangla.com.bd" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--primary-bg); color: var(--text-main);">
+                            <input type="text" id="setSiteTitle" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--primary-bg); color: var(--text-main);">
                         </div>
-                        <button class="btn btn-primary">সেভ সেটিংস</button>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem;">কন্টাক্ট ইমেইল</label>
+                            <input type="email" id="setContactEmail" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--primary-bg); color: var(--text-main);">
+                        </div>
+                        <button class="btn btn-primary" onclick="saveSettings()">সেভ সেটিংস</button>
                     </div>
                 </div>
 

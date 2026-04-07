@@ -5,6 +5,8 @@ let USERS = [];
 let REVIEWS = [];
 let ADS = [];
 let CATEGORIES = [];
+let SETTINGS = {};
+let STATS = {};
 let NOTIFICATIONS = [];
 let charts = {};
 
@@ -24,19 +26,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchData() {
     try {
-        const [lRes, bRes, uRes, cRes, rRes] = await Promise.all([
+        const [lRes, bRes, uRes, cRes, rRes, sRes, setRes, nRes] = await Promise.all([
             fetch('/api/admin/listings'),
             fetch('/api/blogs'),
             fetch('/api/admin/users'),
             fetch('/api/categories'),
-            fetch('/api/reviews')
+            fetch('/api/reviews'),
+            fetch('/api/admin/stats'),
+            fetch('/api/admin/settings'),
+            fetch('/api/admin/notifications')
         ]);
-        const [lData, bData, uData, cData, rData] = await Promise.all([lRes.json(), bRes.json(), uRes.json(), cRes.json(), rRes.json()]);
+        const [lData, bData, uData, cData, rData, sData, setData, nData] = await Promise.all([
+            lRes.json(), bRes.json(), uRes.json(), cRes.json(), rRes.json(), sRes.json(), setRes.json(), nRes.json()
+        ]);
         
         if (lData.success) LISTINGS = lData.listings;
         if (bData.success) BLOGS = bData.blogs;
         if (cData.success) CATEGORIES = cData.categories;
         if (rData.success) REVIEWS = rData.reviews;
+        if (sData.success) STATS = sData.stats;
+        if (setData.success) SETTINGS = setData.settings;
+        if (nData.success) NOTIFICATIONS = nData.notifications;
         if (uData.success) {
             USERS = uData.users.map(u => ({
                 ...u,
@@ -149,6 +159,28 @@ async function deleteCategory(id) {
     } catch(err) { alert('ত্রুটি হয়েছে!'); }
 }
 
+async function saveSettings() {
+    const siteTitle = document.getElementById('setSiteTitle').value;
+    const contactEmail = document.getElementById('setContactEmail').value;
+    
+    try {
+        const res = await fetch('/api/admin/settings', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ siteTitle, contactEmail })
+        });
+        if((await res.json()).success) {
+            alert('সেটিংস সফলভাবে সেভ হয়েছে!');
+        }
+    } catch(err) { alert('সেভ করতে সমস্যা হয়েছে!'); }
+}
+
+async function markAllRead() {
+    try {
+        await fetch('/api/admin/notifications/read', { method: 'PUT' });
+        fetchData();
+    } catch(err) { console.error('Error marking as read:', err); }
+}
 
 // --- Navigation & UI ---
 function switchTab(tabId, el) {
@@ -202,11 +234,14 @@ function renderOverview() {
     if (!statsGrid) return;
 
     const stats = [
-        { label: "মোট লিস্টিং", val: LISTINGS.length, icon: "list", color: "var(--info)", trend: "+12%", up: true },
-        { label: "মোট ইউজার", val: USERS.length + 5237, icon: "users", color: "var(--accent-solid)", trend: "+5%", up: true },
-        { label: "মোট আয়", val: "৳১২,৪৫০", icon: "dollar-sign", color: "#fff", trend: "+8%", up: true, special: "stat-card-revenue" },
-        { label: "মোট ব্লগ", val: BLOGS.length, icon: "file-text", color: "var(--warning)", trend: "-1%", up: false }
+        { label: "মোট লিস্টিং", val: STATS.totalListings || 0, icon: "list", color: "var(--info)", trend: "+12%", up: true },
+        { label: "মোট ইউজার", val: STATS.totalUsers || 0, icon: "users", color: "var(--accent-solid)", trend: "+5%", up: true },
+        { label: "মোট আয়", val: "৳" + (STATS.revenue || 0).toLocaleString(), icon: "dollar-sign", color: "#fff", trend: "+8%", up: true, special: "stat-card-revenue" },
+        { label: "মোট ব্লগ", val: STATS.totalBlogs || 0, icon: "file-text", color: "var(--warning)", trend: "-1%", up: false }
     ];
+
+    document.getElementById('setSiteTitle').value = SETTINGS.siteTitle || '';
+    document.getElementById('setContactEmail').value = SETTINGS.contactEmail || '';
 
     statsGrid.innerHTML = stats.map(s => `
         <div class="glass-card ${s.special || ''}">
@@ -224,7 +259,56 @@ function renderOverview() {
         </div>
     `).join('');
     
+    renderDetailedAnalytics();
     if (window.lucide) lucide.createIcons();
+}
+
+function renderDetailedAnalytics() {
+    const analyticsPanel = document.getElementById('tab-analytics');
+    if (!analyticsPanel) return;
+
+    const topListingsHTML = (STATS.topListings || []).map(l => `
+        <tr>
+            <td style="font-weight:600;">${l.name}</td>
+            <td>${l.category}</td>
+            <td>👁️ ${l.views || 0}</td>
+        </tr>
+    `).join('');
+
+    analyticsPanel.innerHTML = `
+        <h1 class="page-title">বিস্তারিত এনালাইটিক্স</h1>
+        <div class="stats-grid">
+             <div class="glass-card">
+                <h3>🔝 শীর্ষ ১০ লিস্টিং (Views)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>নাম</th><th>ক্যাটাগরি</th><th>ভিউস</th></tr></thead>
+                        <tbody>${topListingsHTML}</tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="glass-card">
+                <h3>📊 ক্যাটাগরি ডিস্ট্রিবিউশন</h3>
+                <canvas id="categoryDistChart" style="height: 250px;"></canvas>
+            </div>
+        </div>
+    `;
+
+    // Render Category Chart
+    const ctx = document.getElementById('categoryDistChart');
+    if (ctx && STATS.categoryStats) {
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(STATS.categoryStats),
+                datasets: [{
+                    data: Object.values(STATS.categoryStats),
+                    backgroundColor: ['#6366F1', '#A855F7', '#F43F5E', '#10B981', '#F59E0B']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
 }
 
 // --- Charts ---
@@ -240,7 +324,7 @@ function initCharts() {
                 labels: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
                 datasets: [{
                     label: 'ভিজিটর',
-                    data: [1200, 1900, 1500, 2100, 1800, 2400, 2800],
+                    data: STATS.visits || [0,0,0,0,0,0,0],
                     borderColor: '#6366F1',
                     backgroundColor: 'rgba(99, 102, 241, 0.1)',
                     fill: true, tension: 0.4
@@ -307,17 +391,24 @@ function renderCategoriesTable() {
 function renderAdsTable() {
     const tbody = document.getElementById('adsTableBody');
     if (!tbody) return;
-    tbody.innerHTML = ADS.map(a => `
+
+    const featuredListings = LISTINGS.filter(l => l.isPremium || l.isFeatured);
+
+    tbody.innerHTML = featuredListings.map(a => `
         <tr>
-            <td style="font-weight:600;">${a.biz}</td>
-            <td><span class="badge badge-purple">${a.plan}</span></td>
-            <td>${a.expiry}</td>
-            <td style="font-weight:700;">${a.cost}</td>
+            <td style="font-weight:600;">${a.name}</td>
+            <td><span class="badge badge-purple">${a.plan || 'Standard'}</span></td>
+            <td>${a.expiryDate || 'Unlimited'}</td>
+            <td style="font-weight:700;">৳${a.cost || 0}</td>
             <td>
                 <button class="btn btn-ghost" style="font-size:0.75rem;">রিনিউ</button>
             </td>
         </tr>
     `).join('');
+
+    if (featuredListings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">কোনো প্রোমোটেড বিজ্ঞাপন নেই।</td></tr>';
+    }
 
     const plans = [
         { name: 'Gold Plan', price: '৳৫,০০০ / মাস', info: 'শীর্ষে দেখাবে + ৩টি ক্যাটাগরি' },

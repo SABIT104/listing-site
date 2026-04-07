@@ -25,7 +25,7 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 }
 
 if (!fs.existsSync(DB_PATH)) {
-  fs.writeFileSync(DB_PATH, JSON.stringify({ users: [], listings: [], blogs: [], categories: [], reviews: [] }, null, 2), 'utf8');
+  fs.writeFileSync(DB_PATH, JSON.stringify({ users: [], listings: [], blogs: [], categories: [], reviews: [], settings: {}, notifications: [] }, null, 2), 'utf8');
 }
 
 function readDB() {
@@ -38,9 +38,13 @@ function readDB() {
       { _id: 'cat3', name: 'শিক্ষা', icon: '📚' }
     ];
     if (!db.reviews) db.reviews = [];
+    if (!db.settings) db.settings = { siteTitle: 'BusinessBangla.com.bd', contactEmail: 'info@businessbangla.com.bd' };
+    if (!db.notifications) db.notifications = [
+      { _id: 'notif1', type: 'system', text: 'সার্ভার সফলভাবে চালু হয়েছে।', time: new Date().toISOString(), unread: true }
+    ];
     return db;
   } catch {
-    return { users: [], listings: [], blogs: [], categories: [], reviews: [] };
+    return { users: [], listings: [], blogs: [], categories: [], reviews: [], settings: {}, notifications: [] };
   }
 }
 
@@ -308,6 +312,80 @@ app.put('/api/categories/:id', (req, res) => {
     db.categories[idx] = { ...db.categories[idx], ...req.body, _id: req.params.id };
     writeDB(db);
     res.json({ success: true, category: db.categories[idx] });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+// 10.3 Admin Stats & Settings API
+app.get('/api/admin/stats', (req, res) => {
+  try {
+    const db = readDB();
+    
+    // Aggregate category stats
+    const categoryStats = {};
+    db.listings.forEach(l => {
+      const cat = l.category || 'Other';
+      categoryStats[cat] = (categoryStats[cat] || 0) + 1;
+    });
+
+    // Top 10 listings by views
+    const topListings = [...db.listings]
+      .sort((a, b) => (b.views || 0) - (a.views || 0))
+      .slice(0, 10);
+
+    const stats = {
+      totalListings: db.listings.length,
+      pendingListings: db.listings.filter(l => !l.isLive).length,
+      totalUsers: db.users.length,
+      totalBlogs: db.blogs.length,
+      totalReviews: db.reviews.length,
+      topListings: topListings,
+      categoryStats: categoryStats,
+      revenue: 12450, // Mock revenue if not implemented
+      visits: [1200, 1900, 1500, 2100, 1800, 2400, 2800] // Mock visits trend
+    };
+    res.json({ success: true, stats });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.get('/api/admin/settings', (req, res) => {
+  try {
+    const db = readDB();
+    res.json({ success: true, settings: db.settings });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.put('/api/admin/settings', (req, res) => {
+  try {
+    const db = readDB();
+    db.settings = { ...db.settings, ...req.body };
+    writeDB(db);
+    res.json({ success: true, settings: db.settings });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.get('/api/admin/notifications', (req, res) => {
+  try {
+    const db = readDB();
+    res.json({ success: true, notifications: db.notifications || [] });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.put('/api/admin/notifications/read', (req, res) => {
+  try {
+    const db = readDB();
+    db.notifications.forEach(n => n.unread = false);
+    writeDB(db);
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false });
   }
