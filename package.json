@@ -1,0 +1,22 @@
+{
+  "name": "business-bangla-listing",
+  "version": "1.0.0",
+  "description": "Professional Business Directory for Bangladesh",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "directory",
+    "listing",
+    "bangladesh",
+    "business"
+  ],
+  "author": "BusinessBangla",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
