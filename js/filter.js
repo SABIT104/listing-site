@@ -1,10 +1,10 @@
 // Applies multiple active filters (AND logic)
-function filterListings(filters) {
-  let results = [...LISTINGS];
+function filterListings(filters, data = window.LISTINGS || []) {
+  let results = [...data];
 
   // 1. Division filter
   if (filters.division && filters.division !== 'all' && filters.division !== 'সব বিভাগ') {
-    results = results.filter(item => item.div === filters.division);
+    results = results.filter(item => (item.div || item.division) === filters.division);
   }
 
   // 2. District filter
@@ -14,24 +14,26 @@ function filterListings(filters) {
 
   // 3. Category filter
   if (filters.category && filters.category !== 'all' && filters.category !== 'সব ধরন') {
-    results = results.filter(item => item.cat === filters.category);
+    results = results.filter(item => (item.category || item.cat) === filters.category);
   }
 
   // 4. Search Query filter (matches name, category, area, tags)
   if (filters.query) {
     const q = filters.query.toLowerCase().trim();
     results = results.filter(item => {
-      const matchName = item.name.toLowerCase().includes(q);
-      const matchCat = item.cat.toLowerCase().includes(q) || item.catLabel.toLowerCase().includes(q);
-      const matchArea = item.area.toLowerCase().includes(q);
-      const matchTags = item.tags.some(t => t.toLowerCase().includes(q));
+      const matchName = (item.name || '').toLowerCase().includes(q);
+      const catText = (item.category || item.cat || '').toLowerCase();
+      const catLabel = (item.catLabel || '').toLowerCase();
+      const matchCat = catText.includes(q) || catLabel.includes(q);
+      const matchArea = (item.area || '').toLowerCase().includes(q);
+      const matchTags = (item.tags || []).some(t => t.toLowerCase().includes(q));
       return matchName || matchCat || matchArea || matchTags;
     });
   }
 
   // 5. Rating filter
   if (filters.minRating) {
-    results = results.filter(item => item.rating >= parseFloat(filters.minRating));
+    results = results.filter(item => (item.rating || 0) >= parseFloat(filters.minRating));
   }
 
   // 6. Checkbox filters
@@ -48,15 +50,15 @@ function filterListings(filters) {
   }
 
   if (filters.onlineService) {
-    results = results.filter(item => item.tags.includes('অনলাইন') || item.tags.includes('ফ্রিল্যান্সিং'));
+    results = results.filter(item => (item.tags || []).includes('অনলাইন') || (item.tags || []).includes('ফ্রিল্যান্সিং'));
   }
 
   if (filters.homeDelivery) {
-    results = results.filter(item => item.tags.includes('ডেলিভারি'));
+    results = results.filter(item => (item.tags || []).includes('ডেলিভারি'));
   }
 
   if (filters.open247) {
-    results = results.filter(item => item.hours.includes('২৪ ঘণ্টা'));
+    results = results.filter(item => (item.hours || '').includes('২৪ ঘণ্টা'));
   }
 
   return results;

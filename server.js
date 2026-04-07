@@ -1,120 +1,306 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
-const dns = require('dns');
+const fs = require('fs');
+const crypto = require('crypto');
+const multer = require('multer');
 
 // Load environment variables
 dotenv.config();
 
-// Fix SRV resolution for MongoDB Atlas in restricted environments
-try {
-  dns.setServers(['8.8.8.8', '8.8.4.4']);
-} catch (e) {}
-
-const User = require('./models/User');
-const Listing = require('./models/Listing');
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// ─── Local JSON Database ────────────────────────────────────────────────────
+
+const DATA_DIR = path.join(__dirname, 'data');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR);
+}
+const DB_PATH = path.join(DATA_DIR, 'db.json');
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR);
+}
+
+if (!fs.existsSync(DB_PATH)) {
+  fs.writeFileSync(DB_PATH, JSON.stringify({ users: [], listings: [], blogs: [] }, null, 2), 'utf8');
+}
+
+function readDB() {
+  try {
+    const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    if (!db.blogs) db.blogs = [];
+    return db;
+  } catch {
+    return { users: [], listings: [], blogs: [] };
+  }
+}
+
+function writeDB(data) {
+  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+}
+
+function newId() {
+  return crypto.randomBytes(12).toString('hex');
+}
+
+console.log('✅ Using local JSON database at: data/db.json');
+
+// ─── Middleware ─────────────────────────────────────────────────────────────
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, {
-  serverSelectionTimeoutMS: 5000 
-})
-  .then(() => console.log('✅ Connected to MongoDB Atlas!'))
-  .catch(err => {
-    console.error('❌ MongoDB Connection Error:', err.message);
-    console.log('⚠️ HINT: If you see a DNS SRV error, please provide the "Standard Connection String" (driver 2.2.12 or earlier) from MongoDB Atlas.');
-  });
+// ─── Multer Config ────────────────────────────────────────────────────────
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${Math.round(Math.random() * 1E9)}${ext}`);
+  }
+});
+const upload = multer({ storage });
 
-// --- API ROUTES ---
+// ─── API ROUTES ─────────────────────────────────────────────────────────────
 
 // 1. Register
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ success: false, message: 'এই ইমেইলটি ইতিপূর্বে ব্যবহৃত হয়েছে।' });
-    const newUser = new User({ name, email, password });
-    await newUser.save();
-    res.status(201).json({ success: true, user: { id: newUser._id, name: newUser.name, email: newUser.email } });
+    if (!name || !email || !password)
+      return res.status(400).json({ success: false, message: 'সব তথ্য প্রদান করুন।' });
+
+    const db = readDB();
+    const existing = db.users.find(u => u.email === email);
+    if (existing)
+      return res.status(400).json({ success: false, message: 'এই ইমেইলটি ইতিপূর্বে ব্যবহৃত হয়েছে।' });
+
+    const user = { _id: newId(), name, email, password, registeredAt: new Date().toISOString() };
+    db.users.push(user);
+    writeDB(db);
+
+    res.status(201).json({ success: true, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
     res.status(500).json({ success: false, message: 'সার্ভার ত্রুটি!' });
   }
 });
 
 // 2. Login
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, password });
-    if (!user) return res.status(401).json({ success: false, message: 'ভুল ইমেইল অথবা পাসওয়ার্ড!' });
+    const db = readDB();
+    const user = db.users.find(u => u.email === email && u.password === password);
+    if (!user)
+      return res.status(401).json({ success: false, message: 'ভুল ইমেইল অথবা পাসওয়ার্ড!' });
+
     res.json({ success: true, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
     res.status(500).json({ success: false, message: 'সার্ভার ত্রুটি!' });
   }
 });
 
-// 3. Create Listing
-app.post('/api/listings', async (req, res) => {
+// 3. Admin Login
+app.post('/api/admin/login', (req, res) => {
   try {
-    const newListing = new Listing(req.body);
-    await newListing.save();
-    res.status(201).json({ success: true, listing: newListing });
+    const { email, password } = req.body;
+    const adminUser = process.env.ADMIN_USER || 's@bit';
+    const adminPass = process.env.ADMIN_PASS || 's@bit104';
+    if (email === adminUser && password === adminPass) {
+      return res.json({ success: true, admin: true, name: 'Admin' });
+    }
+    res.status(401).json({ success: false, message: 'ভুল অ্যাডমিন ক্রেডেনশিয়াল!' });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'লিস্টিং সেভ করতে সমস্যা হয়েছে।' });
+    res.status(500).json({ success: false, message: 'সার্ভার ত্রুটি!' });
   }
 });
 
-// 4. Get User Listings
-app.get('/api/listings/user/:userId', async (req, res) => {
+// 4. Create Listing
+app.post('/api/listings', (req, res) => {
   try {
-    const listings = await Listing.find({ userId: req.params.userId }).sort({ createdAt: -1 });
+    const db = readDB();
+    const listing = {
+      _id: newId(),
+      userId: req.body.userId || '',
+      name: req.body.name || '',
+      category: req.body.category || '',
+      area: req.body.area || '',
+      district: req.body.district || '',
+      division: req.body.division || '',
+      phone: req.body.phone || '',
+      description: req.body.description || '',
+      icon: req.body.icon || '🏢',
+      rating: req.body.rating || 0,
+      reviews: req.body.reviews || 0,
+      verified: req.body.verified || false,
+      featured: req.body.featured || false,
+      premium: req.body.premium || false,
+      isLive: req.body.isLive || false,
+      views: req.body.views || 0,
+      createdAt: new Date().toISOString()
+    };
+    db.listings.push(listing);
+    writeDB(db);
+    res.status(201).json({ success: true, listing });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'লিস্টিং সেভ করতে সমস্যা হয়েছে।' });
+  }
+});
+
+// 5. Get User Listings
+app.get('/api/listings/user/:userId', (req, res) => {
+  try {
+    const db = readDB();
+    const listings = db.listings
+      .filter(l => l.userId === req.params.userId)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json({ success: true, listings });
   } catch (err) {
     res.status(500).json({ success: false });
   }
 });
 
-// 5. Get All Approved Listings
-app.get('/api/listings', async (req, res) => {
+// 6. Get All Approved Listings
+app.get('/api/listings', (req, res) => {
   try {
-    const query = req.query.category ? { category: req.query.category, isLive: true } : { isLive: true };
-    const listings = await Listing.find(query).sort({ createdAt: -1 });
+    const db = readDB();
+    let listings = db.listings.filter(l => l.isLive === true);
+    if (req.query.category) {
+      listings = listings.filter(l => l.category === req.query.category);
+    }
+    listings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json({ success: true, listings });
   } catch (err) {
     res.status(500).json({ success: false });
   }
 });
 
-// 6. Update Listing
-app.put('/api/listings/:id', async (req, res) => {
+// 7. Get All Listings (Admin)
+app.get('/api/admin/listings', (req, res) => {
   try {
-    const updated = await Listing.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json({ success: true, listing: updated });
+    const db = readDB();
+    const listings = db.listings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    res.json({ success: true, listings });
   } catch (err) {
     res.status(500).json({ success: false });
   }
 });
 
-// 7. Delete Listing
-app.delete('/api/listings/:id', async (req, res) => {
+// 8. Update Listing
+app.put('/api/listings/:id', (req, res) => {
   try {
-    await Listing.findByIdAndDelete(req.params.id);
+    const db = readDB();
+    const idx = db.listings.findIndex(l => l._id === req.params.id);
+    if (idx === -1) return res.status(404).json({ success: false, message: 'লিস্টিং পাওয়া যায়নি।' });
+    db.listings[idx] = { ...db.listings[idx], ...req.body, _id: req.params.id };
+    writeDB(db);
+    res.json({ success: true, listing: db.listings[idx] });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+// 9. Delete Listing
+app.delete('/api/listings/:id', (req, res) => {
+  try {
+    const db = readDB();
+    const before = db.listings.length;
+    db.listings = db.listings.filter(l => l._id !== req.params.id);
+    if (db.listings.length === before)
+      return res.status(404).json({ success: false, message: 'লিস্টিং পাওয়া যায়নি।' });
+    writeDB(db);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false });
   }
 });
 
-// Serve Frontend (index.html as root) - POSIX-compliant Catch-all
+// 10. Get All Users (Admin)
+app.get('/api/admin/users', (req, res) => {
+  try {
+    const db = readDB();
+    const users = db.users.map(u => ({ id: u._id, name: u.name, email: u.email, registeredAt: u.registeredAt }));
+    res.json({ success: true, users });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+// 11. BLOG APIs
+app.get('/api/blogs', (req, res) => {
+  try {
+    const db = readDB();
+    res.json({ success: true, blogs: db.blogs.sort((a,b) => new Date(b.date) - new Date(a.date)) });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.post('/api/blogs', upload.single('image'), (req, res) => {
+  try {
+    const db = readDB();
+    const blog = {
+      _id: newId(),
+      title: req.body.title || '',
+      category: req.body.category || '',
+      excerpt: req.body.excerpt || '',
+      content: req.body.content || '',
+      image: req.file ? `/uploads/${req.file.filename}` : (req.body.image || ''),
+      icon: req.body.icon || '📝',
+      date: new Date().toISOString(),
+      views: 0
+    };
+    db.blogs.push(blog);
+    writeDB(db);
+    res.status(201).json({ success: true, blog });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.put('/api/blogs/:id', upload.single('image'), (req, res) => {
+  try {
+    const db = readDB();
+    const idx = db.blogs.findIndex(b => b._id === req.params.id);
+    if (idx === -1) return res.status(404).json({ success: false });
+    
+    const update = { ...req.body };
+    if (req.file) update.image = `/uploads/${req.file.filename}`;
+    
+    db.blogs[idx] = { ...db.blogs[idx], ...update, _id: req.params.id };
+    writeDB(db);
+    res.json({ success: true, blog: db.blogs[idx] });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+app.delete('/api/blogs/:id', (req, res) => {
+  try {
+    const db = readDB();
+    db.blogs = db.blogs.filter(b => b._id !== req.params.id);
+    writeDB(db);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+// 12. General Image Upload
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (req.file) {
+    res.json({ success: true, url: `/uploads/${req.file.filename}` });
+  } else {
+    res.status(400).json({ success: false });
+  }
+});
+
+// ─── Serve Frontend ──────────────────────────────────────────────────────────
+
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   res.header('Content-Type', 'text/html; charset=utf-8');
@@ -122,5 +308,7 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 BusinessBangla server active on http://127.0.0.1:${PORT}`);
+  console.log(`🚀 BusinessBangla server running on http://127.0.0.1:${PORT}`);
+  console.log(`📁 Data stored in: data/db.json`);
+  console.log(`👤 Admin login: ${process.env.ADMIN_USER || 's@bit'} / ${process.env.ADMIN_PASS || 's@bit104'}`);
 });

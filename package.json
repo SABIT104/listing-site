@@ -4,7 +4,7 @@
   "description": "Professional Business Directory for Bangladesh",
   "main": "index.html",
   "scripts": {
-    "start": "serve .",
+    "start": "node server.js",
     "deploy": "vercel --prod"
   },
   "keywords": [
@@ -15,7 +15,12 @@
   ],
   "author": "BusinessBangla",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "multer": "^2.1.1"
+  },
   "devDependencies": {
     "serve": "^14.2.1"
   }

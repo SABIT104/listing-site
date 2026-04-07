@@ -40,7 +40,7 @@
     }
 
     .admin-logo {
-      padding: 30px 20px;
+      padding: 20px;
       text-align: center;
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
@@ -311,6 +311,7 @@
     }
 
     .btn-primary:hover { background: #333; transform: translateY(-2px); }
+    .btn-white { background: #fff; border: 1px solid #ddd; color: #333; padding: 12px 25px; border-radius: 12px; font-weight: 600; cursor: pointer; }
 
     /* ANIMATIONS */
     .tab-panel { display: none; animation: slideUp 0.4s ease-out; }
@@ -340,16 +341,16 @@
   <!-- SIDEBAR -->
   <aside class="admin-sidebar">
     <div class="admin-logo">
-      <h2>বিজনেসবাংলা</h2>
-      <span style="font-size: 11px; opacity:0.6; font-weight:600; letter-spacing:1px;">ADMIN PANEL v2.0</span>
+      <img src="../images/logo.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 15px;">
+      <h2>BusinessBangla</h2>
+      <span style="display:block; font-size: 11px; opacity:0.6; font-weight:600; letter-spacing:1px; color:#fff; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px; margin-top:10px;">ADMIN PANEL v2.1</span>
     </div>
     <ul class="admin-menu">
       <li class="active" onclick="switchTab('dashboard', this)">📊 ওভারভিউ (Overview)</li>
       <li onclick="switchTab('listings', this)">📋 লিস্টিং ম্যানেজমেন্ট</li>
-      <li onclick="switchTab('categories', this)">📂 ক্যাটাগরি কনট্রোল</li>
       <li onclick="switchTab('blog', this)">📝 এসইও ব্লগ (Blog)</li>
       <li onclick="switchTab('settings', this)">⚙️ জেনারেল সেটিংস</li>
-      <li onclick="window.location.href='index.html'" style="margin-top: 40px; color:#ffccbc; font-weight:600;">🏠 সাইটে ফিরে যান</li>
+      <li onclick="window.location.href='../index.html'" style="margin-top: 40px; color:#ffccbc; font-weight:600;">🏠 সাইটে ফিরে যান</li>
     </ul>
   </aside>
 
@@ -369,7 +370,7 @@
       
       <!-- TAB 1: OVERVIEW -->
       <div id="tab-dashboard" class="tab-panel active">
-        <div class="stat-grid">
+        <div class="stat-grid" id="statsGrid">
           <!-- Populated by JS -->
         </div>
 
@@ -402,8 +403,54 @@
               <option value="শিক্ষা">শিক্ষা</option>
               <option value="আইটি">আইটি</option>
             </select>
-            <button class="btn-primary" onclick="alert('নতুন লিস্টিং ফর্ম চালু করা হচ্ছে...')">+ নতুন লিস্টিং</button>
+            <button class="btn-primary" onclick="showNewListingForm()">+ নতুন লিস্টিং</button>
           </div>
+        </div>
+
+        <!-- NEW LISTING FORM (HIDDEN BY DEFAULT) -->
+        <div id="newListingFormSection" class="card admin-form" style="display:none; max-width: 900px; margin-bottom: 30px; border: 2px solid var(--yp);">
+          <h2 style="margin-top:0;">🏢 নতুন বিজনেস লিস্টিং যোগ করুন</h2>
+          <form id="listingForm" onsubmit="handleListingSubmit(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div>
+                <label>বিজনেসের নাম</label>
+                <input type="text" id="lstName" required>
+                <label>ক্যাটাগরি</label>
+                <input type="text" id="lstCat" placeholder="যেমন: খাবার, স্বাস্থ্য">
+                <label>বিভাগ</label>
+                <select id="lstDiv">
+                  <option value="ঢাকা">ঢাকা</option>
+                  <option value="চট্টগ্রাম">চট্টগ্রাম</option>
+                  <option value="রাজশাহী">রাজশাহী</option>
+                  <option value="সিলেট">সিলেট</option>
+                  <option value="খুলনা">খুলনা</option>
+                </select>
+                <label>জেলা</label>
+                <input type="text" id="lstDistrict">
+                <label>এলাকা</label>
+                <input type="text" id="lstArea">
+              </div>
+              <div>
+                <label>ফোন নাম্বার</label>
+                <input type="text" id="lstPhone">
+                <label>ইমেজ আপলোড</label>
+                <input type="file" id="lstImage" accept="image/*">
+                <label>ইমোজী আইকন</label>
+                <input type="text" id="lstIcon" placeholder="🏢">
+                <label>বর্ণনা (Description)</label>
+                <textarea id="lstDesc" rows="5"></textarea>
+                <div style="display: flex; gap: 20px; margin-top: 15px;">
+                  <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" id="lstVerified"> যাচাইকৃত</label>
+                  <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" id="lstFeatured"> ফিচারড</label>
+                  <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" id="lstPremium"> প্রিমিয়াম</label>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+              <button type="submit" class="btn-primary">লিস্টিং সেভ করুন</button>
+              <button type="button" class="btn-white" onclick="hideNewListingForm()">বাতিল</button>
+            </div>
+          </form>
         </div>
 
         <div style="overflow-x: auto;">
@@ -424,48 +471,43 @@
         </div>
       </div>
 
-      <!-- TAB 3: CATEGORIES -->
-      <div id="tab-categories" class="tab-panel">
-        <div class="card" style="max-width: 600px;">
-           <h3>ক্যাটাগরি ম্যানেজমেন্ট</h3>
-           <p style="color: #666; margin-bottom: 25px;">হোম পেজের 'পপুলার ক্যাটাগরি' কন্ট্রোল করুন।</p>
-           <ul style="list-style: none; padding: 0;">
-              <li style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
-                 <span>🍛 খাবার (Food)</span>
-                 <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-              </li>
-              <li style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
-                 <span>🏥 স্বাস্থ্য (Health)</span>
-                 <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-              </li>
-              <li style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
-                 <span>📚 শিক্ষা (Education)</span>
-                 <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-              </li>
-              <li style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
-                 <span>💻 ফ্রিল্যান্সিং (Freelancing)</span>
-                 <label class="switch"><input type="checkbox"><span class="slider"></span></label>
-              </li>
-           </ul>
-           <button class="btn-primary" style="margin-top: 20px;">পরিবর্তন সেভ করুন</button>
-        </div>
-      </div>
-
       <!-- TAB 4: BLOG -->
       <div id="tab-blog" class="tab-panel">
-        <div class="card admin-form" style="max-width: 900px;">
-          <h2 style="margin-top:0;">📝 নতুন এসইও ব্লগ পাবলিশ</h2>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-            <div>
-              <label>টাইটেল (Bengali)</label>
-              <input type="text" placeholder="যেমন: ব্যবসা সফল করার টিপস">
-              <label>থাম্বনেইল লিংক</label>
-              <input type="text" placeholder="URL here">
-              <label>কন্টেন্ট</label>
-              <textarea rows="10" placeholder="বিস্তারিত এখানে লিখুন..."></textarea>
-            </div>
-            <div style="background: #f8f9fa; padding: 25px; border-radius: 20px;">
-              <h4 style="margin-top:0; color:var(--green);">🚀 SEO Toolkit</h4>
+        <div class="analytics-row">
+          <div class="card" style="flex: 1;">
+            <h2 style="margin-top:0;">📝 নতুন ব্লগ পাবলিশ করুন</h2>
+            <p style="color: #666; margin-bottom: 25px;">আপনার ব্যবসার এসইও বৃদ্ধির জন্য নিয়মিত ব্লগ লিখুন।</p>
+            
+            <form id="blogForm" onsubmit="handleBlogSubmit(event)" class="admin-form">
+              <label>ব্লগ টাইটেল</label>
+              <input type="text" id="blogTitle" placeholder="যেমন: ৫টি সেরা অনলাইন বিজনেস আইডিয়া" required>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                  <label>ক্যাটাগরি</label>
+                  <select id="blogCategory">
+                    <option>ব্যবসা ও প্রবৃদ্ধি</option>
+                    <option>মার্কেটিং টিপস</option>
+                    <option>টেকনোলজি</option>
+                    <option>লাইফস্টাইল</option>
+                  </select>
+                </div>
+                <div>
+                  <label>ব্লগ থাম্বনেইল (ছবি)</label>
+                  <input type="file" id="blogImage" accept="image/*">
+                </div>
+              </div>
+
+              <label>বিস্তারিত কন্টেন্ট</label>
+              <textarea id="blogContent" rows="12" placeholder="এখানে আপনার ব্লগের বিস্তারিত লিখুন..."></textarea>
+              
+              <button type="submit" class="btn-primary" style="background: var(--yp); color: var(--dark); margin-top: 20px; width: 100%;">ব্লগ পাবলিশ করুন</button>
+            </form>
+          </div>
+
+          <div class="card" style="width: 350px;">
+            <h4 style="margin-top:0; color:var(--green);">🚀 SEO Toolkit</h4>
+            <div class="admin-form">
               <label>Meta Title</label>
               <input type="text" placeholder="SEO Title">
               <label>Meta Description</label>
@@ -473,33 +515,34 @@
               <label>ফোকাস কীওয়ার্ড</label>
               <input type="text" placeholder="যেমন: ব্যবসা, লাভ, আইডিয়া">
             </div>
+            
+            <h4 style="margin-top:20px;">সাম্প্রতিক ব্লগ</h4>
+            <div id="recentBlogList" style="font-size:13px; color:#555;">
+               <!-- Loaded by JS -->
+            </div>
           </div>
-          <button class="btn-primary" style="background: var(--yp); color: var(--dark); margin-top: 20px;">ব্লগ পাবলিশ করুন</button>
         </div>
       </div>
 
       <!-- TAB 5: SETTINGS -->
       <div id="tab-settings" class="tab-panel">
         <div class="card admin-form" style="max-width: 700px;">
-           <h2 style="margin-top:0;">⚙️ সাইট সেটিংস</h2>
-           <label>সাইটের নাম</label>
-           <input type="text" value="BusinessBangla.com.bd">
-           <label>মারকিউ বিজ্ঞাপন টেক্সট (Marquee)</label>
-           <input type="text" value="আপনার বিজনেসকে শীর্ষে দেখান — প্রিমিয়াম লিস্টিংয়ে ৩× বেশি ভিজিটর পান">
-           <label>সাপোর্ট ফোন নাম্বার</label>
-           <input type="text" value="০১৭৭৫-০০০৯৯৯">
-           <label>ফুটার কপিরাইট টেক্সট</label>
-           <input type="text" value="© 2026 BusinessBangla.com.bd">
-           <button class="btn-primary">সব সেটিংস সেভ করুন</button>
+            <h2 style="margin-top:0;">⚙️ সাইট সেটিংস</h2>
+            <label>সাইটের নাম</label>
+            <input type="text" value="BusinessBangla.com.bd">
+            <label>মারকিউ বিজ্ঞাপন টেক্সট (Marquee)</label>
+            <input type="text" value="আপনার বিজনেসকে শীর্ষে দেখান — প্রিমিয়াম লিস্টিংয়ে ৩× বেশি ভিজিটর পান">
+            <label>সাপোর্ট ফোন নাম্বার</label>
+            <input type="text" value="০১৭৭৫-০০০৯৯৯">
+            <label>ফুটার কপিরাইট টেক্সট</label>
+            <input type="text" value="© 2026 BusinessBangla.com.bd">
+            <button class="btn-primary">সব সেটিংস সেভ করুন</button>
         </div>
       </div>
 
     </div>
   </main>
 
-  <script src="../js/data.js"></script>
   <script src="../js/admin.js"></script>
 </body>
 </html>
-
-

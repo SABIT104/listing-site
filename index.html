@@ -190,11 +190,13 @@
     /* CTA Banner */
     .cta-banner {
       background: linear-gradient(135deg, var(--green), #0A3319);
-      border-radius: var(--radius-lg);
-      padding: 40px;
+      border-radius: 0;
+      padding: 50px 40px;
       text-align: center;
       color: #fff;
-      margin-bottom: 40px;
+      margin: 0;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
     }
     .cta-banner h2 { color: #fff; margin-bottom: 15px; }
     .btn-gold {
@@ -269,6 +271,132 @@
 
     @media (max-width: 768px) {
       .featured-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Trusted Partners Slider (Marquee style) */
+    .partners-wrapper {
+      background: #fff;
+      padding: 30px 0;
+      margin: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+    }
+    .partners-track {
+      display: flex;
+      width: max-content;
+      gap: 50px;
+      align-items: center;
+      padding: 0 20px;
+    }
+    .partner-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--mid);
+      font-weight: 600;
+      font-size: 16px;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      opacity: 0.7;
+      cursor: pointer;
+    }
+    .partner-item:hover {
+      opacity: 1;
+      color: var(--yp2);
+      transform: scale(1.05);
+    }
+    .partner-item span.logo-icon {
+      font-size: 28px;
+    }
+
+    /* Latest Blog Section */
+    .blog-section {
+      padding: 60px 20px;
+      background: #fdfdfd;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+    }
+    .blog-section .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .blog-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .blog-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border-color: var(--yp);
+    }
+    .blog-thumb {
+      height: 200px;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
+      border-bottom: 1px solid var(--border);
+    }
+    .blog-body {
+      padding: 25px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .blog-cat {
+      font-size: 12px;
+      color: var(--yp2);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .blog-body h3 {
+      font-size: 20px;
+      color: var(--dark);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .blog-body p {
+      color: var(--mid);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+    .blog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #999;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+    .read-more {
+      font-weight: 600;
+      color: var(--green);
+      transition: color 0.2s;
+    }
+    .blog-card:hover .read-more {
+      color: var(--yp2);
     }
   </style>
 </head>
@@ -474,6 +602,13 @@
         </div>
       </div>
 
+      <!-- PART 4.5: TRUSTED PARTNERS SLIDER -->
+      <div class="partners-wrapper">
+        <div class="partners-track" id="partnersTrack">
+          <!-- Dynamic Injection via main.js -->
+        </div>
+      </div>
+
       <h2 class="section-title">ফিচার্ড বিজনেস</h2>
       <div class="featured-carousel-wrapper" id="featuredGrid">
         <!-- Will inject via JS but keeping static wrapper -->
@@ -486,6 +621,19 @@
       </div>
     </div>
     
+    <!-- LATEST BLOG SECTION -->
+    <section class="blog-section">
+      <div class="container">
+        <h2 class="section-title">সর্বশেষ ব্লগ</h2>
+        <div class="blog-grid" id="latestBlogGrid">
+          <!-- Dynamic Injection via blog logic -->
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+          <a href="info/blog.html" class="btn-gold" style="background: transparent; border: 2px solid var(--yp); color: var(--yp2);">সকল ব্লগ দেখুন →</a>
+        </div>
+      </div>
+    </section>
+
     <!-- Category Details Modal -->
     <div id="catModalOverlay" class="modal-overlay" onclick="closeCategoryModal()">
       <div class="cat-modal" onclick="event.stopPropagation()">
@@ -509,7 +657,8 @@
               <span style="color:#ccc;">BusinessBangla.com.bd</span>
             </div>
           </a>
-          <p style="color: #ccc; font-size: 14px;">বাংলাদেশের সবচেয়ে বড় and বিশ্বস্ত ডিজিটাল ইয়েলো পেজেস এবং ডিরেক্টরি। আপনার প্রয়োজনীয় সব ব্যবসা এক ঠিকানায়।</p>\n          <div style="margin-top: 15px;"><a href="auth/admin-login.html" style="color: #777; font-size: 13px; text-decoration: none; border: 1px solid #333; padding: 4px 10px; border-radius: 4px; transition: all 0.2s;">🔒 অ্যাডমিন প্যানেল</a></div>
+          <p style="color: #ccc; font-size: 14px;">বাংলাদেশের সবচেয়ে বড় এবং বিশ্বস্ত ডিজিটাল ইয়েলো পেজেস এবং ডিরেক্টরি। আপনার প্রয়োজনীয় সব ব্যবসা এক ঠিকানায়।</p>
+          <div style="margin-top: 15px;"><a href="auth/admin-login.html" style="color: #777; font-size: 13px; text-decoration: none; border: 1px solid #333; padding: 4px 10px; border-radius: 4px; transition: all 0.2s;">🔒 অ্যাডমিন প্যানেল</a></div>
         </div>
         <div style="text-align: center;">
           <h4>বিভাগসমূহ</h4>
@@ -551,6 +700,7 @@
     </div>
   </footer>
 
+  <script src="js/blogs.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/data.js?v=1775204587481"></script>
   <script src="js/main.js?v=1775204587481"></script>
@@ -580,7 +730,7 @@
     const toBnConvert = (numStr) => numStr.toString().replace(/\d/g, d => toBnMap[d]);
 
     // Animate numbers
-    document.addEventListener("DOMContentLoaded", () => {
+    function initStats() {
       const counters = document.querySelectorAll('.count-num');
       counters.forEach(counter => {
         const target = +counter.getAttribute('data-val');
@@ -599,9 +749,15 @@
         };
         updateCount();
       });
+    }
 
+    function initFeatured() {
+      if (!window.LISTINGS || window.LISTINGS.length === 0) return;
+      
       // Inject all featured items for the animation carousel
-      const ftList = LISTINGS.filter(l => l.featured);
+      const ftList = window.LISTINGS.filter(l => l.featured);
+      if (ftList.length === 0) return;
+      
       const ftAnimationList = [...ftList, ...ftList]; // Duplicate for seamless sliding
       
       const grid = document.getElementById('featuredGrid');
@@ -610,11 +766,11 @@
           <div class="ft-card">
             <div class="ft-header">
               <span style="font-size: 24px;">${item.icon}</span>
-              <h3><a href="listings/business.html?id=${item.id}">${item.name}</a></h3>
+              <h3><a href="listings/business.html?id=${item._id || item.id}">${item.name}</a></h3>
             </div>
             <div class="ft-body">
               <div style="margin-bottom: 5px;">📍 ${item.area}, ${item.district}</div>
-              <div style="margin-bottom: 10px;">⭐ <b>${item.rating}</b> (${item.reviews} রিভিউ)</div>
+              <div style="margin-bottom: 10px;">⭐ <b>${item.rating || 0}</b> (${item.reviews || 0} রিভিউ)</div>
               <div>📞 ${item.phone}</div>
             </div>
           </div>
@@ -645,6 +801,15 @@
 
         grid.addEventListener('mouseenter', () => clearInterval(sliderInterval));
         grid.addEventListener('mouseleave', () => sliderInterval = setInterval(slideNext, 2500));
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initStats();
+      if (window.LISTINGS && window.LISTINGS.length > 0) {
+        initFeatured();
+      } else {
+        window.addEventListener('dataReady', initFeatured);
       }
     });
   </script>

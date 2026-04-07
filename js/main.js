@@ -1,4 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Global Data State
+  window.LISTINGS = [];
+  window.BLOGS = [];
+
+  // Fetch initial data
+  try {
+    const [lRes, bRes] = await Promise.all([
+      fetch('/api/listings'),
+      fetch('/api/blogs')
+    ]);
+    const [lData, bData] = await Promise.all([lRes.json(), bRes.json()]);
+    if (lData.success) window.LISTINGS = lData.listings;
+    if (bData.success) window.BLOGS = bData.blogs;
+    window.dispatchEvent(new CustomEvent('dataReady'));
+  } catch (err) {
+    console.error('Failed to fetch initial data:', err);
+  }
+
+  const LISTINGS = window.LISTINGS;
+  const BLOGS = window.BLOGS;
   
   // Map filenames to category names
   const pageCategoryMap = {
@@ -86,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (catName === 'সব ধরন') {
           catCount = LISTINGS.length;
         } else {
-          catCount = LISTINGS.filter(item => item.cat === catName || item.catLabel === catName).length;
+          catCount = LISTINGS.filter(item => item.category === catName || item.cat === catName).length;
         }
         countEl.textContent = toBengaliNumeral(catCount);
       }
@@ -165,7 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isListingsPage) {
     
     const applyAndRender = () => {
-      const filtered = filterListings(currentFilters);
+      // For now we still use local filtering for ease, but on the fetched server data
+      const filtered = filterListings(currentFilters, LISTINGS); 
       renderListings(filtered, 'listingList');
       renderPagination(filtered.length);
       renderCount(filtered.length);
@@ -240,5 +261,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial render
     applyAndRender();
+  }
+
+  // --- Home Page Specific Logic ---
+  const isHomePage = fileName === 'index.html' || fileName === 'index' || fileName === '';
+
+  if (isHomePage) {
+    // 1. Render Trusted Partners Slider
+    const partnersTrack = document.getElementById('partnersTrack');
+    if (partnersTrack && LISTINGS.length > 0) {
+      const trusted = LISTINGS.filter(l => l.verified || l.premium || l.featured);
+      const partnerList = [...trusted, ...trusted]; // Duplicate for seamless scroll
+      
+      partnersTrack.innerHTML = partnerList.map(item => `
+        <div class="partner-item" title="${item.name}">
+          <span class="logo-icon">${item.icon}</span>
+          <span>${item.name}</span>
+        </div>
+      `).join('');
+
+      // Partners slider animation
+      let partnerPos = 0;
+      const stepPartners = () => {
+        partnerPos -= 0.5; // Speed
+        if (Math.abs(partnerPos) >= partnersTrack.scrollWidth / 2) {
+          partnerPos = 0;
+        }
+        partnersTrack.style.transform = `translateX(${partnerPos}px)`;
+        requestAnimationFrame(stepPartners);
+      };
+      stepPartners();
+    }
+
+    // 2. Render Latest Blogs
+    const blogGrid = document.getElementById('latestBlogGrid');
+    if (blogGrid && BLOGS.length > 0) {
+      blogGrid.innerHTML = BLOGS.slice(0, 3).map(post => `
+        <div class="blog-card" onclick="window.location.href='info/blog.html?id=${post._id}'">
+          <div class="blog-thumb">${post.image ? `<img src="${post.image}" style="width:100%;height:100%;object-fit:cover;">` : post.icon}</div>
+          <div class="blog-body">
+            <div class="blog-cat">${post.category}</div>
+            <h3>${post.title}</h3>
+            <p>${post.excerpt}</p>
+            <div class="blog-meta">
+              <span>📅 ${post.date}</span>
+              <span class="read-more">আরও পড়ুন →</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
   }
 });

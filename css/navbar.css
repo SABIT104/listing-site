@@ -41,10 +41,12 @@
 }
 
 .logo-box {
-  width: 40px;
-  height: 40px;
-  background-color: var(--dark);
-  border-radius: 4px;
+  width: 50px;
+  height: 50px;
+  background: url('../images/logo.png') no-repeat center;
+  background-size: contain;
+  border-radius: 50%; /* It's a circular logo */
+  flex-shrink: 0;
 }
 
 .logo-text h1 {
