@@ -1,0 +1,177 @@
+/* Modern Responsive Design Rules */
+
+/* Tablets */
+@media (max-width: 991px) {
+  .page-layout {
+    flex-direction: column;
+  }
+  .sidebar-col {
+    display: none; /* Hide sidebar by default on tablet/mobile */
+  }
+  .header-search {
+    margin-left: 10px;
+    flex: 1;
+  }
+  .cat-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+  /* Topbar hide for space */
+  .topbar {
+    display: none;
+  }
+
+  /* Header adjustments */
+  .header-main .container {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .logo {
+    justify-content: center;
+  }
+
+  /* Fix Search Bar wrapping */
+  .header-search {
+    display: flex;
+    flex-direction: column; /* Stack inputs vertically */
+    gap: 5px;
+    margin-left: 0;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .header-search input,
+  .header-search .div-select,
+  .header-search button {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 12px;
+  }
+  
+  .header-search button {
+    border: none;
+  }
+
+  /* Actions (Category, Map, Ad button) */
+  .header-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 5px;
+  }
+
+  /* Fix Category Strip (Horizontal scroll instead of squishing) */
+  .cat-strip {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px; /* space for scrollbar */
+  }
+  
+  .cat-strip .container {
+    display: flex;
+    flex-wrap: nowrap; /* Force one line */
+    justify-content: flex-start;
+  }
+
+  .cat-tab {
+    flex: 0 0 auto; /* Prevent shrinking */
+    padding: 8px 12px;
+  }
+
+  /* Sort Bar Adjustments */
+  .sort-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .sort-pills {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  /* Listing Items */
+  .listing-item {
+    display: flex; /* Overriding grid */
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    align-items: stretch !important;
+  }
+
+  .biz-name {
+    flex-wrap: wrap; /* Badges will wrap if name is long */
+  }
+
+  .biz-rating {
+    flex-wrap: wrap;
+  }
+
+  .biz-meta {
+    flex-direction: column !important; /* Stack meta lines */
+    gap: 8px !important;
+  }
+
+  /* Right Panel Actions */
+  .item-right {
+    min-width: 100% !important;
+    border-left: none !important;
+    padding-left: 0 !important;
+    border-top: 1px solid var(--border);
+    padding-top: 15px;
+  }
+  
+  .item-right .btn-details {
+    margin-top: auto;
+  }
+
+  /* Footer */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .footer-logo {
+    justify-content: center;
+  }
+
+  /* Cat Grid on homepage */
+  .cat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Modal */
+  .modal-content {
+    width: 95%;
+    margin: 10% auto;
+    padding: 20px;
+  }
+
+  .modal-grid-info {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small UI Adjustments */
+@media (max-width: 480px) {
+  .cat-grid {
+    grid-template-columns: 1fr;
+  }
+  .ad-strip {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  .ad-strip button {
+    width: 100%;
+  }
+}

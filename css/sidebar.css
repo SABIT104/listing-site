@@ -1,0 +1,124 @@
+/* Sidebar styling */
+.sidebar-box {
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  font-weight: 700;
+  padding: 15px;
+  background: var(--yp);
+  border-bottom: 1px solid var(--border);
+  color: var(--dark);
+}
+
+.sidebar-content {
+  padding: 15px;
+}
+
+/* Accordion for Divisions */
+.btn-all-div {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-all-div.active, .btn-all-div:hover {
+  background: var(--yp);
+}
+
+.accordion-item {
+  margin-bottom: 5px;
+}
+
+.accordion-btn {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 12px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--bg);
+}
+
+.accordion-btn:hover {
+  background: var(--bg);
+}
+
+.accordion-content {
+  display: none;
+  padding-left: 20px;
+  padding-top: 5px;
+}
+
+.accordion-content.open {
+  display: block;
+}
+
+.district-link {
+  display: block;
+  padding: 6px;
+  color: var(--mid);
+  font-size: 14px;
+}
+
+.district-link:hover, .district-link.active {
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* Radio & Checkbox Filters */
+.filter-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: var(--mid);
+  font-weight: 500;
+}
+
+.filter-label:hover {
+  color: var(--dark);
+}
+
+.star-text {
+  color: var(--yp2);
+}
+
+/* Promo Box */
+.promo-box {
+  background: linear-gradient(to bottom right, var(--green), #0A3319);
+  color: #fff;
+  padding: 20px;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.promo-box h4 {
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.btn-promo {
+  display: inline-block;
+  background: var(--yp);
+  color: var(--dark);
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+}

@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla&display=swap');
+
+:root {
+  --yp: #D4A017;
+  --yp2: #B8860B;
+  --yp-light: #FFF8E1;
+  --yp-xlight: #FFFDF5;
+  --green: #1B6B3A;
+  --green-light: #E8F5EE;
+  --red: #C8102E;
+  --dark: #1C1C1C;
+  --mid: #4A4A4A;
+  --muted: #787878;
+  --border: #E4E4E4;
+  --bg: #F4F4F2;
+  --radius: 6px;
+  --radius-lg: 10px;
+}

@@ -1,0 +1,237 @@
+/* Part 1: Topbar */
+.topbar {
+  background-color: var(--dark);
+  color: #fff;
+  font-size: 13px;
+  padding: 6px 0;
+}
+
+.topbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar-links a {
+  color: #fff;
+  margin-left: 15px;
+}
+
+.topbar-links a:hover {
+  text-decoration: underline;
+}
+
+/* Part 2: Header */
+.header {
+  background-color: var(--yp);
+  height: 68px;
+}
+
+.header .container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-box {
+  width: 40px;
+  height: 40px;
+  background-color: var(--dark);
+  border-radius: 4px;
+}
+
+.logo-text h1 {
+  font-family: 'Tiro Bangla', serif;
+  font-size: 24px;
+  color: var(--dark);
+  line-height: 1;
+}
+
+.logo-text span {
+  font-size: 12px;
+  color: var(--dark);
+  opacity: 0.8;
+}
+
+.header-search {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 20px;
+}
+
+.search-grid {
+  display: grid;
+  grid-template-columns: 1fr 160px 100px;
+  background: #fff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 48px;
+  border: 1px solid var(--border);
+}
+
+.search-grid input {
+  border: none;
+  padding: 0 15px;
+  font-size: 15px;
+  color: var(--dark);
+}
+
+.div-select-wrap {
+  display: flex;
+  align-items: center;
+  border-left: 1px solid var(--border);
+  padding: 0 10px;
+  background: #fff;
+}
+
+.pin-icon {
+  color: var(--red);
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.search-grid select {
+  border: none;
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+  color: var(--mid);
+  font-size: 15px;
+  outline: none;
+}
+
+.search-grid button {
+  background-color: var(--dark);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.3s;
+}
+
+.search-grid button:hover {
+  background-color: #000;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-nav a {
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.header-nav a.btn-add {
+  background-color: var(--dark);
+  color: var(--yp);
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  transition: transform 0.2s;
+}
+
+.header-nav a.btn-add:hover {
+  transform: translateY(-2px);
+}
+
+/* Part 3: Category Tab Strip */
+.cat-strip {
+  background-color: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-strip .container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  padding: 10px 0;
+  overflow-x: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.cat-strip .container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.cat-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--mid);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 10px 15px;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.cat-tab:hover {
+  background-color: var(--yp-light);
+  color: var(--dark);
+  border-bottom: 3px solid var(--yp2);
+  border-radius: 4px 4px 0 0;
+}
+
+.cat-tab.active {
+  color: #B8860B; /* var(--yp2) */
+  border-bottom: 3px solid #B8860B;
+}
+
+.c-count {
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.cat-tab.active .c-icon, .cat-tab.active .c-count {
+  background: var(--yp-light);
+  color: var(--yp2);
+}
+
+/* Marquee Advertisement Styles */
+.marquee-container {
+  background: var(--yp-light);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 10px 0;
+  position: relative;
+  display: flex;
+}
+
+.marquee-content {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 15px;
+  padding-right: 15px; /* Spacing before the clone starts */
+  animation: marquee 25s linear infinite;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--dark);
+}
+
+.marquee-content:hover,
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}

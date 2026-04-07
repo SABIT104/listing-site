@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Details - BusinessBangla.com.bd</title>
+  
+  <link rel="stylesheet" href="css/variables.css?v=1775204587481">
+  <link rel="stylesheet" href="css/base.css?v=1775204587481">
+  <link rel="stylesheet" href="css/navbar.css?v=1775204587481">
+  <link rel="stylesheet" href="css/modal.css?v=1775204587481">
+  <link rel="stylesheet" href="css/responsive.css?v=1775204587481">
+  
+  <style>
+    .biz-header {
+      background: var(--yp-light);
+      border-bottom: 3px solid var(--yp);
+      padding: 40px 0;
+      margin-bottom: 30px;
+    }
+    .biz-header-content {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .biz-icon-large {
+      width: 100px;
+      height: 100px;
+      background: #fff;
+      border: 1px solid var(--yp);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+    }
+    .biz-title-wrap h1 {
+      font-size: 32px;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    
+    .badge-vf, .badge-ft, .badge-pr {
+       font-size: 11px; padding: 3px 8px; border-radius: 4px; margin-left:10px; vertical-align: middle;
+    }
+    .badge-vf { border: 1px solid var(--green); color: var(--green); }
+    .badge-ft { background: var(--yp); color: var(--dark); }
+    .badge-pr { background: var(--dark); color: var(--yp); }
+
+    .biz-info-pills {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      color: var(--mid);
+      font-size: 15px;
+      margin-top: 10px;
+    }
+    .stars { color: var(--yp2); letter-spacing: 2px; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    .main-panel h3, .side-panel h3 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--green);
+    }
+    
+    .desc-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 30px;
+      line-height: 1.7;
+      color: var(--mid);
+    }
+    
+    .tags-section {
+      margin-bottom: 30px;
+    }
+    .tag-pill {
+      background: var(--bg);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      display: inline-block;
+      color: var(--mid);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .gallery-box {
+      border: 2px dashed var(--border);
+      background: var(--bg);
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      border-radius: var(--radius);
+    }
+
+    .reviews-section .review-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+
+    .info-grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .info-sm-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: var(--radius);
+    }
+    .info-sm-card h5 { color: var(--muted); font-size: 13px; margin-bottom: 5px; }
+
+    .map-box {
+      height: 250px;
+      border: 2px dashed var(--border);
+      background: var(--bg);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+    .map-box span { font-size: 30px; color: var(--green); margin-bottom: 10px; }
+
+    .action-bar-sticky {
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 15px;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+      display: flex;
+      gap: 15px;
+    }
+    .action-bar-sticky button {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: var(--radius);
+      font-weight: 600;
+    }
+    .btn-sticky-phone { background: var(--yp); color: var(--dark); }
+    .btn-sticky-msg { background: var(--green); color: #fff; }
+
+    /* Similar */
+    .similar-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      margin-top: 40px;
+    }
+    .sim-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .biz-header-content { flex-direction: column; text-align: center; }
+      .biz-info-pills { justify-content: center; }
+      .gallery-grid, .similar-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PART 1: TOPBAR -->
+  <div class="topbar">
+    <div class="container">
+      <div>🇧🇩 বাংলাদেশের বৃহত্তম বিজনেস ডিরেক্টরি</div>
+      <div class="topbar-links">
+        <a href="login.html">লগইন</a> | <a href="register.html">রেজিস্ট্রেশন</a> | <a href="faq.html">সাহায্য</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 2: HEADER -->
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-box"></div>
+        <div class="logo-text">
+          <h1>বিজনেসবাংলা</h1>
+          <span>BusinessBangla.com.bd</span>
+        </div>
+      </a>
+      
+      <div class="header-search">
+        <div class="search-grid">
+          <input type="text" id="headerSearchInput" placeholder="কি খুঁজছেন? (যেমন: রেস্টুরেন্ট)">
+          <select id="headerDivSelect">
+            <option value="all">সব বিভাগ</option>
+            <option value="ঢাকা">ঢাকা</option>
+            <option value="চট্টগ্রাম">চট্টগ্রাম</option>
+            <option value="রাজশাহী">রাজশাহী</option>
+            <option value="খুলনা">খুলনা</option>
+            <option value="বরিশাল">বরিশাল</option>
+            <option value="সিলেট">সিলেট</option>
+            <option value="রংপুর">রংপুর</option>
+            <option value="ময়মনসিংহ">ময়মনসিংহ</option>
+          </select>
+          <button id="headerSearchBtn">খুঁজুন</button>
+        </div>
+      </div>
+
+      <div class="header-nav">
+        <a href="listings.html">ক্যাটাগরি</a>
+        <a href="map.html">ম্যাপ</a>
+        <a href="add-listing.html" class="btn-add">+ বিজ্ঞাপন দিন</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- PART 3: CATEGORY TAB STRIP -->
+  <div class="cat-strip">
+    <div class="container">
+      <a href="listings.html" class="cat-tab">🌐 সব ধরন</a>
+      <a href="listings.html?cat=খাবার" class="cat-tab">🍛 খাবার</a>
+      <a href="listings.html?cat=স্বাস্থ্য" class="cat-tab">🏥 স্বাস্থ্য</a>
+      <!-- ... -->
+    </div>
+  </div>
+
+  
+
+
+  <div id="appContainer">
+    <!-- JS will inject content here based on ?id= -->
+    <div style="padding: 100px; text-align: center;">লোডিং...</div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="logo-area" style="margin-bottom: 20px; text-decoration: none;">
+            <div class="logo-box"></div>
+            <div class="logo-text">
+              <h1 style="color:var(--yp);">বিজনেসবাংলা</h1>
+              <span style="color:#ccc;">BusinessBangla.com.bd</span>
+            </div>
+          </a>
+          <p style="color: #ccc; font-size: 14px;">বাংলাদেশের সবচেয়ে বড় এবং বিশ্বস্ত ডিজিটাল ইয়েলো পেজেস এবং ডিরেক্টরি। আপনার প্রয়োজনীয় সব ব্যবসা এক ঠিকানায়।</p>\n          <div style="margin-top: 15px;"><a href="admin-login.html" style="color: #777; font-size: 13px; text-decoration: none; border: 1px solid #333; padding: 4px 10px; border-radius: 4px; transition: all 0.2s;">🔒 অ্যাডমিন প্যানেল</a></div>
+        </div>
+        <div style="text-align: center;">
+          <h4>বিভাগসমূহ</h4>
+          <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 15px;">
+            <li><a href="listings.html?div=ঢাকা">ঢাকা</a></li>
+            <li><a href="listings.html?div=বরিশাল">বরিশাল</a></li>
+            <li><a href="listings.html?div=চট্টগ্রাম">চট্টগ্রাম</a></li>
+            <li><a href="listings.html?div=সিলেট">সিলেট</a></li>
+            <li><a href="listings.html?div=রাজশাহী">রাজশাহী</a></li>
+            <li><a href="listings.html?div=রংপুর">রংপুর</a></li>
+            <li><a href="listings.html?div=খুলনা">খুলনা</a></li>
+            <li><a href="listings.html?div=ময়মনসিংহ">ময়মনসিংহ</a></li>
+          </ul>
+        </div>
+        <div style="text-align: center;">
+          <h4>জনপ্রিয় ক্যাটাগরি</h4>
+          <ul>
+            <li><a href="food.html">অন্ন (খাবার)</a></li>
+            <li><a href="listings.html?cat=ফ্যাশন">বস্ত্র (ফ্যাশন)</a></li>
+            <li><a href="accommodation.html">বাসস্থান (আবাসন)</a></li>
+            <li><a href="education.html">শিক্ষা</a></li>
+            <li><a href="health.html">চিকিৎসা (স্বাস্থ্য)</a></li>
+          </ul>
+        </div>
+        <div style="text-align: center;">
+          <h4>সহায়তা</h4>
+          <ul>
+            <li><a href="contact.html">যোগাযোগ করুন</a></li>
+            <li><a href="privacy.html">প্রাইভেসি পলিসি</a></li>
+            <li><a href="terms.html">টার্মস অফ সার্ভিস</a></li>
+            <li><a href="faq.html">সচরাচর জিজ্ঞাসা</a></li>
+            <li><a href="blog.html">ব্লগ (Blog)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 BusinessBangla.com.bd. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js?v=1775204587481"></script>
+  <script src="js/main.js?v=1775204587481"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      const item = LISTINGS.find(x => x.id == id);
+      const container = document.getElementById('appContainer');
+
+      if (!item) {
+        container.innerHTML = '<div style="padding: 100px; text-align: center;"><h3>দুঃখিত, বিজনেসটি খুঁজে পাওয়া যায়নি।</h3><a href="listings.html">ফিরে যান</a></div>';
+        return;
+      }
+
+      // Generate Badges
+      let badges = '';
+      if(item.verified) badges += '<span class="badge-vf">✓ যাচাইকৃত</span>';
+      if(item.featured) badges += '<span class="badge-ft">ফিচার্ড</span>';
+      if(item.premium) badges += '<span class="badge-pr">প্রিমিয়াম</span>';
+
+      const tagsHtml = item.tags.map(t => `<span class="tag-pill">${t}</span>`).join('');
+      const simItems = LISTINGS.filter(l => l.cat === item.cat && l.id !== item.id).slice(0, 3);
+      
+      const simHtml = simItems.map(s => `
+        <div class="sim-card">
+          <div style="font-size: 30px; margin-bottom: 10px;">${s.icon}</div>
+          <h4><a href="business.html?id=${s.id}">${s.name}</a></h4>
+          <div style="font-size: 13px; color: var(--muted); margin-top:5px;">📍 ${s.area}</div>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="biz-header">
+          <div class="container biz-header-content">
+            <div class="biz-icon-large">${item.icon}</div>
+            <div class="biz-title-wrap">
+              <h1>${item.name} ${badges}</h1>
+              <div class="biz-info-pills">
+                <span>📍 ${item.area}, ${item.district}</span>
+                <span>☎ ${item.phone}</span>
+                ${item.web ? `<span>🌐 ${item.web}</span>` : ''}
+                <span><span class="status-dot ${item.open?'open':'closed'}" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${item.open?'var(--green)':'var(--red)'};"></span> ${item.open?'এখন খোলা':'বন্ধ'}</span>
+              </div>
+              <div style="margin-top: 10px; font-size: 15px;">
+                <span class="stars">★★★★★</span> 
+                <span style="font-weight:600; margin-left:5px;">${item.rating}</span> 
+                <span style="color: var(--muted);">(${item.reviews} রিভিউ)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <main class="container">
+          <div class="content-grid">
+            <div class="main-panel">
+              <h3>বিবরণ</h3>
+              <div class="desc-box">${item.desc}</div>
+              
+              <div class="tags-section">
+                ${tagsHtml}
+              </div>
+
+              <h3>গ্যালারি</h3>
+              <div class="gallery-grid">
+                <div class="gallery-box">ছবি যোগ করুন</div>
+                <div class="gallery-box">ছবি যোগ করুন</div>
+                <div class="gallery-box">ছবি যোগ করুন</div>
+              </div>
+
+              <h3>রিভিউ (৩)</h3>
+              <div class="reviews-section">
+                <div class="review-card">
+                  <div style="font-weight: 600;">এ কে রহিম</div>
+                  <div class="stars" style="font-size: 12px; margin-bottom:5px;">★★★★★</div>
+                  <p style="font-size: 14px; color: var(--mid);">অসাধারণ সার্ভিস, আমি মুগ্ধ!</p>
+                </div>
+                <div class="review-card">
+                  <div style="font-weight: 600;">সাদিয়া ইসলাম</div>
+                  <div class="stars" style="font-size: 12px; margin-bottom:5px;">★★★★☆</div>
+                  <p style="font-size: 14px; color: var(--mid);">বেশ ভালো, ব্যবহারও খুব সুন্দর।</p>
+                </div>
+                <div class="review-card">
+                  <div style="font-weight: 600;">তানভীর আহমেদ</div>
+                  <div class="stars" style="font-size: 12px; margin-bottom:5px;">★★★★★</div>
+                  <p style="font-size: 14px; color: var(--mid);">আমার দেখা সেরা। অবশ্যই রিকমেন্ড করছি।</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="side-panel">
+              <div class="info-grid-2x2">
+                <div class="info-sm-card">
+                  <h5>ফোন নম্বর</h5>
+                  <div style="font-weight: 600;">${item.phone}</div>
+                </div>
+                <div class="info-sm-card">
+                  <h5>ওয়েবসাইট</h5>
+                  <div style="font-weight: 600; font-size:14px; word-break: break-all;">${item.web || 'প্রযোজ্য নয়'}</div>
+                </div>
+                <div class="info-sm-card">
+                  <h5>কার্যসময়</h5>
+                  <div style="font-weight: 600; color: ${item.open?'var(--green)':'var(--red)'};">${item.hours}</div>
+                </div>
+                <div class="info-sm-card">
+                  <h5>ঠিকানা</h5>
+                  <div style="font-weight: 600; font-size:14px;">${item.addr}</div>
+                </div>
+              </div>
+
+              <div class="map-box">
+                <span>🗺️</span>
+                ম্যাপ প্রিভিউ
+              </div>
+
+              <div class="similar-businesses">
+                <h3>একই ক্যাটাগরির অন্যান্য</h3>
+                <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
+                  ${simHtml || '<p style="color:var(--muted); font-size:14px;">অন্যান্য কোনো ব্যবসা পাওয়া যায়নি।</p>'}
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <div class="action-bar-sticky">
+          <button class="btn-sticky-phone" onclick="window.location.href='tel:${item.phone}'">📞 ফোন করুন</button>
+          <button class="btn-sticky-msg" onclick="alert('Message feature coming soon!')">✉️ মেসেজ পাঠান</button>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>

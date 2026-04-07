@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Listing - BusinessBangla.com.bd</title>
+  
+  <link rel="stylesheet" href="css/variables.css?v=1775204587481">
+  <link rel="stylesheet" href="css/base.css?v=1775204587481">
+  <link rel="stylesheet" href="css/navbar.css?v=1775204587481">
+  <link rel="stylesheet" href="css/responsive.css?v=1775204587481">
+  
+  <style>
+    .form-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    
+    .page-header { text-align: center; margin-bottom: 30px; }
+    .page-header h1 { font-size: 28px; margin-bottom: 10px; color: var(--dark); }
+    .page-header p { color: var(--muted); font-size: 16px; }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--dark); }
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus { border-color: var(--yp); }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    
+    textarea.form-control { resize: vertical; }
+    
+    .char-counter { font-size: 13px; color: var(--muted); text-align: right; margin-top: 5px; display: block; }
+
+    .checkbox-group { display: flex; gap: 20px; margin-top: 10px; flex-wrap: wrap; }
+    .checkbox-label { display: flex; align-items: center; gap: 8px; font-weight: 500; cursor: pointer; }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--yp);
+      color: var(--dark);
+      font-size: 18px;
+      font-weight: 700;
+      padding: 15px;
+      border-radius: var(--radius);
+      margin-top: 20px;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover { background: var(--yp2); color: #fff; }
+
+    #successMsg {
+      display: none;
+      background: var(--green-light);
+      color: var(--green);
+      padding: 20px;
+      border-radius: var(--radius);
+      text-align: center;
+      font-weight: 600;
+      margin-top: 20px;
+      font-size: 18px;
+      border: 1px solid var(--green);
+    }
+    
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .form-container { padding: 20px; margin: 20px auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PART 1: TOPBAR -->
+  <div class="topbar">
+    <div class="container">
+      <div>🇧🇩 বাংলাদেশের বৃহত্তম বিজনেস ডিরেক্টরি</div>
+      <div class="topbar-links">
+        <a href="login.html">লগইন</a> | <a href="register.html">রেজিস্ট্রেশন</a> | <a href="faq.html">সাহায্য</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 2: HEADER -->
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-box"></div>
+        <div class="logo-text">
+          <h1>বিজনেসবাংলা</h1>
+          <span>BusinessBangla.com.bd</span>
+        </div>
+      </a>
+      
+      <div class="header-nav">
+        <a href="listings.html">ক্যাটাগরি</a>
+        <a href="map.html">ম্যাপ</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- FORM CONTAINER -->
+  <main class="container">
+    <div class="form-container">
+      <div class="page-header">
+        <h1>আপনার বিজনেস যোগ করুন</h1>
+        <p>বিনামূল্যে লিস্ট করুন — লক্ষ গ্রাহকের কাছে পৌঁছান</p>
+      </div>
+
+      <form id="addListingForm">
+        <div class="form-group">
+          <label>বিজনেসের নাম*</label>
+          <input type="text" class="form-control" required placeholder="যেমন: সুলতান'স ডাইন">
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>ক্যাটাগরি*</label>
+            <select class="form-control" required>
+              <option value="" disabled selected>নির্বাচন করুন</option>
+              <option value="খাবার">খাবার</option>
+              <option value="স্বাস্থ্য">স্বাস্থ্য</option>
+              <option value="শিক্ষা">শিক্ষা</option>
+              <option value="ছোট ব্যবসা">ছোট ব্যবসা</option>
+              <option value="ফ্রিল্যান্সিং">ফ্রিল্যান্সিং</option>
+              <option value="কোম্পানি">কোম্পানি</option>
+              <option value="আইটি">আইটি</option>
+              <option value="পরিবহন">পরিবহন</option>
+              <option value="আবাসন">আবাসন</option>
+              <option value="ফ্যাশন">ফ্যাশন</option>
+              <option value="কৃষি">কৃষি</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>বিভাগ*</label>
+            <select class="form-control" required>
+              <option value="" disabled selected>নির্বাচন করুন</option>
+              <option value="ঢাকা">ঢাকা</option>
+              <option value="চট্টগ্রাম">চট্টগ্রাম</option>
+              <option value="রাজশাহী">রাজশাহী</option>
+              <option value="খুলনা">খুলনা</option>
+              <option value="বরিশাল">বরিশাল</option>
+              <option value="সিলেট">সিলেট</option>
+              <option value="রংপুর">রংপুর</option>
+              <option value="ময়মনসিংহ">ময়মনসিংহ</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>জেলা</label>
+          <input type="text" class="form-control" placeholder="যেমন: ঢাকা সদর">
+        </div>
+
+        <div class="form-group">
+          <label>সম্পূর্ণ ঠিকানা*</label>
+          <textarea class="form-control" rows="3" required placeholder="বিশদ ঠিকানা লিখুন"></textarea>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>ফোন নম্বর*</label>
+            <input type="tel" class="form-control" required placeholder="০১৭XXXXXXXX">
+          </div>
+          <div class="form-group">
+            <label>ওয়েবসাইট (যদি থাকে)</label>
+            <input type="url" class="form-control" placeholder="https://example.com">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>ইমেইল (যদি থাকে)</label>
+          <input type="email" class="form-control" placeholder="example@email.com">
+        </div>
+
+        <div class="form-group">
+          <label>বিবরণ*</label>
+          <textarea class="form-control" rows="5" id="descInput" maxlength="500" required placeholder="আপনার ব্যবসা সম্পর্কে বিস্তারিত লিখুন..."></textarea>
+          <span class="char-counter"><span id="charCount">0</span>/500</span>
+        </div>
+
+        <div class="form-group">
+          <label>ট্যাগ</label>
+          <input type="text" class="form-control" placeholder="কমা দিয়ে আলাদা করুন (যেমন: কাবাব, বিরিয়ানি)">
+        </div>
+
+        <div class="form-group">
+          <label>সার্ভিস</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label"><input type="checkbox"> অনলাইন সার্ভিস</label>
+            <label class="checkbox-label"><input type="checkbox"> হোম ডেলিভারি</label>
+            <label class="checkbox-label"><input type="checkbox"> ২৪ ঘণ্টা খোলা</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">বিজনেস যোগ করুন</button>
+      </form>
+
+      <div id="successMsg">
+        আপনার বিজনেস যোগ করা হয়েছে! ✓
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="logo-area" style="margin-bottom: 20px; text-decoration: none;">
+            <div class="logo-box"></div>
+            <div class="logo-text">
+              <h1 style="color:var(--yp);">বিজনেসবাংলা</h1>
+              <span style="color:#ccc;">BusinessBangla.com.bd</span>
+            </div>
+          </a>
+          <p style="color: #ccc; font-size: 14px;">বাংলাদেশের সবচেয়ে বড় এবং বিশ্বস্ত ডিজিটাল ইয়েলো পেজেস এবং ডিরেক্টরি। আপনার প্রয়োজনীয় সব ব্যবসা এক ঠিকানায়।</p>\n          <div style="margin-top: 15px;"><a href="admin-login.html" style="color: #777; font-size: 13px; text-decoration: none; border: 1px solid #333; padding: 4px 10px; border-radius: 4px; transition: all 0.2s;">🔒 অ্যাডমিন প্যানেল</a></div>
+        </div>
+        <div style="text-align: center;">
+          <h4>বিভাগসমূহ</h4>
+          <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 15px;">
+            <li><a href="listings.html?div=ঢাকা">ঢাকা</a></li>
+            <li><a href="listings.html?div=বরিশাল">বরিশাল</a></li>
+            <li><a href="listings.html?div=চট্টগ্রাম">চট্টগ্রাম</a></li>
+            <li><a href="listings.html?div=সিলেট">সিলেট</a></li>
+            <li><a href="listings.html?div=রাজশাহী">রাজশাহী</a></li>
+            <li><a href="listings.html?div=রংপুর">রংপুর</a></li>
+            <li><a href="listings.html?div=খুলনা">খুলনা</a></li>
+            <li><a href="listings.html?div=ময়মনসিংহ">ময়মনসিংহ</a></li>
+          </ul>
+        </div>
+        <div style="text-align: center;">
+          <h4>জনপ্রিয় ক্যাটাগরি</h4>
+          <ul>
+            <li><a href="food.html">অন্ন (খাবার)</a></li>
+            <li><a href="listings.html?cat=ফ্যাশন">বস্ত্র (ফ্যাশন)</a></li>
+            <li><a href="accommodation.html">বাসস্থান (আবাসন)</a></li>
+            <li><a href="education.html">শিক্ষা</a></li>
+            <li><a href="health.html">চিকিৎসা (স্বাস্থ্য)</a></li>
+          </ul>
+        </div>
+        <div style="text-align: center;">
+          <h4>সহায়তা</h4>
+          <ul>
+            <li><a href="contact.html">যোগাযোগ করুন</a></li>
+            <li><a href="privacy.html">প্রাইভেসি পলিসি</a></li>
+            <li><a href="terms.html">টার্মস অফ সার্ভিস</a></li>
+            <li><a href="faq.html">সচরাচর জিজ্ঞাসা</a></li>
+            <li><a href="blog.html">ব্লগ (Blog)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 BusinessBangla.com.bd. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Protect this page - must be logged in
+      Auth.protectPage();
+
+      const descInput = document.getElementById('descInput');
+      const charCount = document.getElementById('charCount');
+      
+      descInput.addEventListener('input', () => {
+        charCount.textContent = descInput.value.length;
+      });
+
+      const form = document.getElementById('addListingForm');
+      const msg = document.getElementById('successMsg');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Simulation: Save to localStorage for the current user
+        const session = Auth.getSession();
+        const userListings = JSON.parse(localStorage.getItem(`bb_listings_${session.id}`) || '[]');
+        
+        const newListing = {
+            id: Date.now(),
+            name: form.querySelector('input[type="text"]').value,
+            category: form.querySelectorAll('select')[0].value,
+            division: form.querySelectorAll('select')[1].value,
+            district: form.querySelector('input[placeholder="যেমন: ঢাকা সদর"]').value,
+            address: form.querySelector('textarea[required]').value,
+            phone: form.querySelector('input[type="tel"]').value,
+            status: 'Pending', // New listings are pending by default
+            isLive: false,
+            featured: false,
+            views: 0,
+            addedAt: new Date().toISOString()
+        };
+        
+        userListings.push(newListing);
+        localStorage.setItem(`bb_listings_${session.id}`, JSON.stringify(userListings));
+
+        form.style.display = 'none';
+        msg.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Redirect to dashboard after 2 seconds
+        setTimeout(() => {
+            window.location.href = 'user-dashboard.html';
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>

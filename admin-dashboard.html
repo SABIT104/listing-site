@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Admin Dashboard - BusinessBangla</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --sidebar-width: 260px;
+      --header-height: 70px;
+      --glass-bg: rgba(255, 255, 255, 0.8);
+      --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+      background: #f4f7f6;
+      font-family: 'Inter', 'SolaimanLipi', sans-serif;
+      margin: 0; padding: 0;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      color: #333;
+    }
+
+    /* PREMIUM SIDEBAR */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, #0A3319 0%, #1B6B3A 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+
+    .admin-logo {
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .admin-logo h2 {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: var(--yp);
+      font-size: 24px;
+      letter-spacing: -0.5px;
+    }
+
+    .admin-menu {
+      list-style: none;
+      padding: 20px 10px;
+      margin: 0;
+      flex: 1;
+    }
+
+    .admin-menu li {
+      padding: 12px 20px;
+      margin-bottom: 6px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-menu li:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    .admin-menu li.active {
+      background: var(--yp);
+      color: var(--dark);
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(239, 184, 16, 0.3);
+    }
+
+    /* MAIN CONTENT AREA */
+    .admin-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .admin-header {
+      height: var(--header-height);
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+      z-index: 90;
+    }
+
+    .admin-header h3 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 20px;
+      color: #111;
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+    }
+
+    .admin-content {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    /* DASHBOARD OVERVIEW */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+      border: 1px solid #f0f0f0;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover { transform: translateY(-5px); }
+
+    .stat-card h3 {
+      font-size: 32px;
+      margin: 0 0 5px 0;
+      color: var(--dark);
+      font-weight: 800;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .stat-card p {
+      margin: 0;
+      color: #888;
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* CHARTS & ANALYTICS */
+    .analytics-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+      border: 1px solid #f0f0f0;
+    }
+
+    /* TABLE DESIGN */
+    .table-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 15px;
+    }
+
+    .search-box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 350px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+
+    .admin-table th {
+      padding: 15px 20px;
+      text-align: left;
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .admin-table tr { 
+      background: #fff; 
+      transition: all 0.2s ease;
+    }
+
+    .admin-table td {
+      padding: 18px 20px;
+      font-size: 14px;
+      border-top: 1px solid transparent;
+      border-bottom: 1px solid transparent;
+    }
+
+    .admin-table tr td:first-child { border-radius: 12px 0 0 12px; border-left: 1px solid #f0f0f0; }
+    .admin-table tr td:last-child { border-radius: 0 12px 12px 0; border-right: 1px solid #f0f0f0; }
+
+    .admin-table tr:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transform: scale(1.002);
+    }
+
+    /* ACTION BUTTONS */
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-edit { background: #e3f2fd; color: #1976d2; }
+    .btn-del { background: #ffebee; color: #d32f2f; }
+    .btn-edit:hover { background: #2196f3; color: #fff; }
+    .btn-del:hover { background: #f44336; color: #fff; }
+
+    .badge {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-success { background: #e8f5e9; color: #2e7d32; }
+    .badge-warning { background: #fff3e0; color: #f57c00; }
+
+    /* FORM & MODAL */
+    .admin-form input, .admin-form select, .admin-form textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-family: inherit;
+      background: #fafafa;
+    }
+
+    .admin-form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .btn-primary {
+      background: var(--dark);
+      color: #fff;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover { background: #333; transform: translateY(-2px); }
+
+    /* ANIMATIONS */
+    .tab-panel { display: none; animation: slideUp 0.4s ease-out; }
+    .tab-panel.active { display: block; }
+    @keyframes slideUp { 
+      from { opacity:0; transform:translateY(15px); } 
+      to { opacity:1; transform:translateY(0); } 
+    }
+
+    /* TOGGLE SWITCH */
+    .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ddd; transition: .3s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--green); }
+    input:checked + .slider:before { transform: translateX(16px); }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ccc; }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <h2>বিজনেসবাংলা</h2>
+      <span style="font-size: 11px; opacity:0.6; font-weight:600; letter-spacing:1px;">ADMIN PANEL v2.0</span>
+    </div>
+    <ul class="admin-menu">
+      <li class="active" onclick="switchTab('dashboard', this)">📊 ওভারভিউ (Overview)</li>
+      <li onclick="switchTab('listings', this)">📋 লিস্টিং ম্যানেজমেন্ট</li>
+      <li onclick="switchTab('categories', this)">📂 ক্যাটাগরি কনট্রোল</li>
+      <li onclick="switchTab('blog', this)">📝 এসইও ব্লগ (Blog)</li>
+      <li onclick="switchTab('settings', this)">⚙️ জেনারেল সেটিংস</li>
+      <li onclick="window.location.href='index.html'" style="margin-top: 40px; color:#ffccbc; font-weight:600;">🏠 সাইটে ফিরে যান</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="admin-main">
+    <header class="admin-header">
+      <h3 id="pageTitle">ওভারভিউ</h3>
+      <div class="header-actions">
+        <div class="user-badge">
+          <div style="width: 10px; height: 10px; background: #4caf50; border-radius: 50%;"></div>
+          Super Admin
+        </div>
+      </div>
+    </header>
+    
+    <div class="admin-content">
+      
+      <!-- TAB 1: OVERVIEW -->
+      <div id="tab-dashboard" class="tab-panel active">
+        <div class="stat-grid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="analytics-row">
+          <div class="card">
+            <h4 style="margin-top:0;">ভিজিটর এনালাইটিক্স (Visits Overview)</h4>
+            <div style="height: 300px; background: #fafafa; border-radius: 15px; display: flex; align-items: center; justify-content: center; color: #ccc;">
+              <span style="font-size: 14px;">[রিয়েল-টাইম চার্ট এখানে লোড হবে]</span>
+            </div>
+          </div>
+          <div class="card" style="display: flex; flex-direction: column;">
+            <h4 style="margin-top:0;">ক্যাটাগরি শেয়ার</h4>
+            <canvas id="analyticsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: LISTINGS MANAGEMENT -->
+      <div id="tab-listings" class="tab-panel">
+        <div class="table-controls">
+          <div class="search-box">
+             <span>🔍</span>
+             <input type="text" id="adminSearch" placeholder="বিজনেসের নাম, ক্যাটাগরি বা জেলা দিয়ে খুঁজুন...">
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <select id="adminCatFilter" style="padding: 10px 15px; border-radius: 12px; border: 1px solid #ddd; outline: none;">
+              <option value="all">সব ক্যাটাগরি</option>
+              <option value="খাবার">খাবার</option>
+              <option value="স্বাস্থ্য">স্বাস্থ্য</option>
+              <option value="শিক্ষা">শিক্ষা</option>
+              <option value="আইটি">আইটি</option>
+            </select>
+            <button class="btn-primary" onclick="alert('নতুন লিস্টিং ফর্ম চালু করা হচ্ছে...')">+ নতুন লিস্টিং</button>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ব্যবসায়িক তথ্য</th>
+                <th>লোকেশন</th>
+                <th>স্ট্যাটাস</th>
+                <th>ফিচারড</th>
+                <th>অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody id="listingsTableBody">
+              <!-- Grid injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: CATEGORIES -->
+      <div id="tab-categories" class="tab-panel">
+        <div class="card" style="max-width: 600px;">
+           <h3>ক্যাটাগরি ম্যানেজমেন্ট</h3>
+           <p style="color: #666; margin-bottom: 25px;">হোম পেজের 'পপুলার ক্যাটাগরি' কন্ট্রোল করুন।</p>
+           <ul style="list-style: none; padding: 0;">
+              <li style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
+                 <span>🍛 খাবার (Food)</span>
+                 <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+              </li>
+              <li style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
+                 <span>🏥 স্বাস্থ্য (Health)</span>
+                 <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+              </li>
+              <li style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
+                 <span>📚 শিক্ষা (Education)</span>
+                 <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+              </li>
+              <li style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
+                 <span>💻 ফ্রিল্যান্সিং (Freelancing)</span>
+                 <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+              </li>
+           </ul>
+           <button class="btn-primary" style="margin-top: 20px;">পরিবর্তন সেভ করুন</button>
+        </div>
+      </div>
+
+      <!-- TAB 4: BLOG -->
+      <div id="tab-blog" class="tab-panel">
+        <div class="card admin-form" style="max-width: 900px;">
+          <h2 style="margin-top:0;">📝 নতুন এসইও ব্লগ পাবলিশ</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div>
+              <label>টাইটেল (Bengali)</label>
+              <input type="text" placeholder="যেমন: ব্যবসা সফল করার টিপস">
+              <label>থাম্বনেইল লিংক</label>
+              <input type="text" placeholder="URL here">
+              <label>কন্টেন্ট</label>
+              <textarea rows="10" placeholder="বিস্তারিত এখানে লিখুন..."></textarea>
+            </div>
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 20px;">
+              <h4 style="margin-top:0; color:var(--green);">🚀 SEO Toolkit</h4>
+              <label>Meta Title</label>
+              <input type="text" placeholder="SEO Title">
+              <label>Meta Description</label>
+              <textarea rows="3" placeholder="Google Meta Description"></textarea>
+              <label>ফোকাস কীওয়ার্ড</label>
+              <input type="text" placeholder="যেমন: ব্যবসা, লাভ, আইডিয়া">
+            </div>
+          </div>
+          <button class="btn-primary" style="background: var(--yp); color: var(--dark); margin-top: 20px;">ব্লগ পাবলিশ করুন</button>
+        </div>
+      </div>
+
+      <!-- TAB 5: SETTINGS -->
+      <div id="tab-settings" class="tab-panel">
+        <div class="card admin-form" style="max-width: 700px;">
+           <h2 style="margin-top:0;">⚙️ সাইট সেটিংস</h2>
+           <label>সাইটের নাম</label>
+           <input type="text" value="BusinessBangla.com.bd">
+           <label>মারকিউ বিজ্ঞাপন টেক্সট (Marquee)</label>
+           <input type="text" value="আপনার বিজনেসকে শীর্ষে দেখান — প্রিমিয়াম লিস্টিংয়ে ৩× বেশি ভিজিটর পান">
+           <label>সাপোর্ট ফোন নাম্বার</label>
+           <input type="text" value="০১৭৭৫-০০০৯৯৯">
+           <label>ফুটার কপিরাইট টেক্সট</label>
+           <input type="text" value="© 2026 BusinessBangla.com.bd">
+           <button class="btn-primary">সব সেটিংস সেভ করুন</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
