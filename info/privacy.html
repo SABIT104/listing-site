@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BusinessBangla.com.bd - বাংলাদেশের বৃহত্তম বিজনেস ডিরেক্টরি</title>
   
-  <link rel="stylesheet" href="css/variables.css?v=1775204587481">
-  <link rel="stylesheet" href="css/base.css?v=1775204587481">
-  <link rel="stylesheet" href="css/navbar.css?v=1775204587481">
-  <link rel="stylesheet" href="css/responsive.css?v=1775204587481">
+  <link rel="stylesheet" href="../css/variables.css?v=1775204587481">
+  <link rel="stylesheet" href="../css/base.css?v=1775204587481">
+  <link rel="stylesheet" href="../css/navbar.css?v=1775204587481">
+  <link rel="stylesheet" href="../css/responsive.css?v=1775204587481">
   
   <style>
     /* Hero Section */
@@ -279,7 +279,7 @@
     <div class="container">
       <div>🇧🇩 বাংলাদেশের বৃহত্তম বিজনেস ডিরেক্টরি</div>
       <div class="topbar-links">
-        <a href="login.html">লগইন</a> | <a href="register.html">রেজিস্ট্রেশন</a> | <a href="faq.html">সাহায্য</a>
+        <a href="../auth/login.html">লগইন</a> | <a href="../auth/register.html">রেজিস্ট্রেশন</a> | <a href="../info/faq.html">সাহায্য</a>
       </div>
     </div>
   </div>
@@ -287,7 +287,7 @@
   <!-- PART 2: HEADER -->
   <header class="header">
     <div class="container">
-      <a href="index.html" class="logo-area">
+      <a href="../index.html" class="logo-area">
         <div class="logo-box"></div>
         <div class="logo-text">
           <h1>বিজনেসবাংলা</h1>
@@ -314,331 +314,108 @@
       </div>
 
       <div class="header-nav">
-        <a href="listings.html">ক্যাটাগরি</a>
-        <a href="map.html">ম্যাপ</a>
-        <a href="add-listing.html" class="btn-add">+ বিজ্ঞাপন দিন</a>
+        <a href="../listings/listings.html">ক্যাটাগরি</a>
+        <a href="../listings/map.html">ম্যাপ</a>
+        <a href="../listings/add-listing.html" class="btn-add">+ বিজ্ঞাপন দিন</a>
       </div>
     </div>
   </header>
 
   <!-- PART 3: CATEGORY TAB STRIP -->
+  <div class="cat-strip">
+    <div class="container">
+      <a href="../listings/listings.html" class="cat-tab">🌐 সব ধরন</a>
+      <a href="../categories/food.html" class="cat-tab">🍛 খাবার</a>
+      <a href="../categories/health.html" class="cat-tab">🏥 স্বাস্থ্য</a>
+      <a href="../categories/education.html" class="cat-tab">📚 শিক্ষা</a>
+      <a href="../categories/small-business.html" class="cat-tab">🛍 ছোট ব্যবসা</a>
+      <a href="../categories/freelancing.html" class="cat-tab">💻 ফ্রিল্যান্সিং</a>
+      <a href="../categories/company.html" class="cat-tab">🏢 কোম্পানি</a>
+      <a href="../categories/it.html" class="cat-tab">⚙️ আইটি</a>
+      <a href="../categories/transport.html" class="cat-tab">🚌 পরিবহন</a>
+      <a href="../categories/accommodation.html" class="cat-tab">🏠 আবাসন</a>
+      <a href="#" class="cat-tab">👗 ফ্যাশন</a>
+      <a href="#" class="cat-tab">🌾 কৃষি</a>
+    </div>
+  </div>
+
+  <!-- PART 3.5: MARQUEE AD -->
+  <div class="marquee-container">
+    <div class="marquee-content" style="pointer-events: none;">
+      <span style="background:var(--red); color:#fff; padding:2px 8px; border-radius:4px; font-size:12px;">বিজ্ঞাপন</span>
+      আপনার বিজনেসকে শীর্ষে দেখান — প্রিমিয়াম লিস্টিংয়ে ৩× বেশি ভিজিটর পান 
+      <span style="display:inline-block; width: 300px;"></span> 
+      <span style="background:var(--red); color:#fff; padding:2px 8px; border-radius:4px; font-size:12px;">বিজ্ঞাপন</span>
+      আপনার বিজনেসকে শীর্ষে দেখান — প্রিমিয়াম লিস্টিংয়ে ৩× বেশি ভিজিটর পান
+      <span style="display:inline-block; width: 300px;"></span> 
+      <span style="background:var(--red); color:#fff; padding:2px 8px; border-radius:4px; font-size:12px;">বিজ্ঞাপন</span>
+      আপনার বিজনেসকে শীর্ষে দেখান — প্রিমিয়াম লিস্টিংয়ে ৩× বেশি ভিজিটর পান
+    </div>
+  </div>
+
   
-  <!-- LEAFLET API -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <style>
-    .map-page-wrapper {
-      display: flex;
-      height: calc(100vh - 120px); /* Adjust based on exact header height */
-      min-height: 600px;
-      padding: 0;
-      margin: 0;
-      background: #fafafa;
-    }
-
-    .map-sidebar {
-      width: 350px;
-      min-width: 350px;
-      background: #fff;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .map-filters {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      background: var(--yp-light);
-    }
-
-    .map-filters select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid var(--yp);
-      border-radius: 8px;
-      font-family: inherit;
-      background: #fff;
-      outline: none;
-    }
-
-    .map-list-wrapper {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-    }
-
-    .map-list-count {
-      font-size: 14px;
-      color: var(--mid);
-      margin-bottom: 15px;
-      font-weight: 600;
-    }
-
-    .map-item-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .map-item-card:hover {
-      border-color: var(--yp);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .map-item-title {
-      font-weight: 700;
-      color: var(--dark);
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .map-item-meta {
-      font-size: 13px;
-      color: var(--mid);
-      margin-bottom: 3px;
-    }
-
-    /* Keep map on right */
-    .map-view {
-      flex: 1;
-      position: relative;
-      background: #e9e5dc;
-    }
-
-    #liveMap {
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    .leaflet-popup-content h4 {
-      margin: 0 0 5px 0;
-      font-size: 16px;
-      color: #1B6B3A;
-    }
-    .leaflet-popup-content p {
-      margin: 0;
-      font-size: 13px;
-      color: #555;
-    }
-    .leaflet-popup-content a {
-      color: #B8860B;
-      font-weight: bold;
-      text-decoration: none;
-    }
-    
-    @media (max-width: 768px) {
-      .map-page-wrapper { flex-direction: column; height: 120vh; }
-      .map-sidebar { width: 100%; height: 50vh; display: none; } /* Hide list on mobile */
-      .map-view { height: 70vh; flex: none; width: 100%; }
-    }
-  </style>
-
-  <main style="max-width:100%; padding: 0;">
-    <div class="map-page-wrapper">
-      <div class="map-sidebar">
-        <div class="map-filters">
-          <h3 style="margin-bottom: 15px; color: var(--dark);">🔍 ফিল্টার করুন</h3>
-          <select id="mapCatFilter">
-            <option value="all">সব ক্যাটাগরি</option>
-            <option value="খাবার">খাবার (রেস্টুরেন্ট/ক্যাফে)</option>
-            <option value="স্বাস্থ্য">স্বাস্থ্য (হাসপাতাল/ডায়াগনস্টিক)</option>
-            <option value="শিক্ষা">শিক্ষা (স্কুল/কোচিং)</option>
-            <option value="শপিং">শপিং (পোশাক/ফ্যাশন)</option>
-            <option value="আবাসন">আবাসন (হোটেল/রিসোর্ট)</option>
-            <option value="আইটি">আইটি ফার্ম</option>
-            <option value="কোম্পানি">কোম্পানি</option>
-            <option value="ছোট ব্যবসা">ছোট ব্যবসা</option>
-            <option value="পরিবহন">পরিবহন</option>
-            <option value="ফ্রিল্যান্সিং">ফ্রিল্যান্সিং</option>
-            <option value="কৃষি">কৃষি</option>
-          </select>
-          
-          <select id="mapDivFilter">
-            <option value="all">সব বিভাগ</option>
-            <option value="ঢাকা">ঢাকা</option>
-            <option value="চট্টগ্রাম">চট্টগ্রাম</option>
-            <option value="রাজশাহী">রাজশাহী</option>
-            <option value="খুলনা">খুলনা</option>
-            <option value="বরিশাল">বরিশাল</option>
-            <option value="সিলেট">সিলেট</option>
-            <option value="রংপুর">রংপুর</option>
-            <option value="ময়মনসিংহ">ময়মনসিংহ</option>
-          </select>
-        </div>
-        
-        <div class="map-list-wrapper">
-          <div class="map-list-count" id="mapListCount">লোড হচ্ছে...</div>
-          <div id="mapListContainer"></div>
-        </div>
-      </div>
-      
-      <div class="map-view">
-        <div id="liveMap"></div>
-      </div>
+  <main class="container" style="padding: 40px 0; min-height: 500px; max-width: 800px;">
+    <h2 style="margin-bottom: 20px; text-align: center;">প্রাইভেসি পলিসি</h2>
+    <div style="background: #fff; padding: 40px; border-radius: var(--radius-lg); border: 1px solid var(--border); line-height: 1.8; color: var(--mid);">
+      <p>বিজনেসবাংলা-তে আপনার তথ্যের নিরাপত্তা আমাদের কাছে অত্যন্ত গুরুত্বপূর্ণ। এই প্রাইভেসি পলিসিতে ব্যাখ্যা করা হয়েছে আমরা কীভাবে আপনার তথ্য সংগ্রহ, ব্যবহার এবং সংরক্ষণ করি।</p>
+      <br>
+      <h3 style="color: var(--dark); margin-bottom: 10px;">১. তথ্য সংগ্রহ</h3>
+      <p>আমরা সাধারণত আপনার নাম, ইমেইল ঠিকানা, ফোন নম্বর এবং আপনার ব্যবসার নাম ও ঠিকানা সংগ্রহ করি যখন আপনি আমাদের সাইটে নিবন্ধন করেন বা কোনো সেবা নেন।</p>
+      <br>
+      <h3 style="color: var(--dark); margin-bottom: 10px;">২. তথ্যের ব্যবহার</h3>
+      <p>সংগৃহীত তথ্যগুলো ব্যবহার করা হয় আপনার জন্য আরও ভালো কাস্টমাইজড সেবা প্রদান করতে, গ্রাহক সহায়তা উন্নত করতে এবং প্রয়োজন অনুযায়ী যোগাযোগ করতে।</p>
+      <br>
+      <h3 style="color: var(--dark); margin-bottom: 10px;">৩. তৃতীয় পক্ষের সাথে শেয়ার</h3>
+      <p>আমরা কোনোভাবেই গ্রাহকের ব্যক্তিগত তথ্য তৃতীয় কোনো পক্ষের কাছে বিক্রি, বিনিময় বা স্থানান্তর করি না। তবে আইনি প্রয়োজনে কর্তৃপক্ষের সহায়তা করতে আমরা বাধ্য।</p>
+      <br>
+      <p><strong>সর্বশেষ আপডেট:</strong> ১ জানুয়ারি, ২০২৬</p>
     </div>
   </main>
-
-  <script>
-    // Configuration & State
-    let map, markersGroup;
-    let businessMarkers = [];
-    
-    // We get LISTINGS from js/data.js which is loaded below in the footerPart
-    // Need to wait until DOMContentLoaded to access LISTINGS
-    
-    window.addEventListener("DOMContentLoaded", () => {
-      // 1. Initialize Map
-      map = L.map('liveMap').setView([23.8103, 90.4125], 7); // Default to Bangladesh
-      
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-      }).addTo(map);
-
-      markersGroup = L.layerGroup().addTo(map);
-
-      // 2. Read URL Params to Pre-filter (Task Requirement #2)
-      const urlParams = new URLSearchParams(window.location.search);
-      const catParam = urlParams.get('cat');
-      const divParam = urlParams.get('div');
-      
-      if (catParam) document.getElementById('mapCatFilter').value = catParam;
-      if (divParam) document.getElementById('mapDivFilter').value = divParam;
-
-      // 3. Event Listeners for Filters
-      document.getElementById('mapCatFilter').addEventListener('change', renderMap);
-      document.getElementById('mapDivFilter').addEventListener('change', renderMap);
-
-      // 4. Initial Render
-      renderMap();
-    });
-
-    const toBnMapMap = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
-    const toBnConvertMap = (numStr) => numStr.toString().replace(/\d/g, d => toBnMapMap[d]);
-
-    function renderMap() {
-      // Clear existing UI
-      markersGroup.clearLayers();
-      document.getElementById('mapListContainer').innerHTML = '';
-      businessMarkers = [];
-
-      // Get Dropdown Values
-      const selCat = document.getElementById('mapCatFilter').value;
-      const selDiv = document.getElementById('mapDivFilter').value;
-
-      // Filter LISTINGS array
-      const results = LISTINGS.filter(item => {
-        let matchCat = selCat === 'all' || item.cat === selCat || item.catLabel === selCat;
-        let matchDiv = selDiv === 'all' || item.div === selDiv;
-        return matchCat && matchDiv;
-      });
-
-      document.getElementById('mapListCount').innerText = `মোট ${toBnConvertMap(results.length)} টি রেজাল্ট পাওয়া গেছে`;
-
-      // Track bounds to auto-zoom
-      let bounds = [];
-
-      results.forEach(item => {
-        // Render Marker
-        if (item.lat && item.lng) {
-          const m = L.marker([item.lat, item.lng]);
-          m.bindPopup(`
-            <h4>${item.icon} ${item.name}</h4>
-            <p>⭐ <b>${item.rating}</b> | 📍 ${item.area}</p>
-            <p>📞 ${item.phone}</p>
-            <a href="business.html?id=${item.id}" target="_blank">বিস্তারিত দেখুন →</a>
-          `);
-          m.addTo(markersGroup);
-          businessMarkers.push({ id: item.id, marker: m });
-          bounds.push([item.lat, item.lng]);
-        }
-
-        // Render List Card
-        const card = document.createElement('div');
-        card.className = 'map-item-card';
-        card.innerHTML = `
-          <div class="map-item-title">${item.icon} ${item.name} <span style="font-size:12px; font-weight:normal; color:#888;">(${item.cat})</span></div>
-          <div class="map-item-meta">📍 ${item.area}, ${item.district}</div>
-          <div class="map-item-meta">⭐ ${toBnConvertMap(item.rating)} (${toBnConvertMap(item.reviews)} রিভিউ)</div>
-        `;
-        
-        // On click, pan to marker and open popup
-        card.onclick = () => {
-          if (item.lat && item.lng) {
-            map.flyTo([item.lat, item.lng], 14, { duration: 1.5 });
-            const foundM = businessMarkers.find(b => b.id === item.id);
-            if (foundM) {
-              setTimeout(() => foundM.marker.openPopup(), 1500); // Open popup after flight
-            }
-          }
-        };
-
-        document.getElementById('mapListContainer').appendChild(card);
-      });
-
-      // Fit bounds
-      if (bounds.length > 0) {
-        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
-      } else {
-        // Bangladesh default view
-        map.setView([23.8103, 90.4125], 7);
-      }
-    }
-  </script>
-
 
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a href="index.html" class="logo-area" style="margin-bottom: 20px; text-decoration: none;">
+          <a href="../index.html" class="logo-area" style="margin-bottom: 20px; text-decoration: none;">
             <div class="logo-box"></div>
             <div class="logo-text">
               <h1 style="color:var(--yp);">বিজনেসবাংলা</h1>
               <span style="color:#ccc;">BusinessBangla.com.bd</span>
             </div>
           </a>
-          <p style="color: #ccc; font-size: 14px;">বাংলাদেশের সবচেয়ে বড় এবং বিশ্বস্ত ডিজিটাল ইয়েলো পেজেস এবং ডিরেক্টরি। আপনার প্রয়োজনীয় সব ব্যবসা এক ঠিকানায়।</p>\n          <div style="margin-top: 15px;"><a href="admin-login.html" style="color: #777; font-size: 13px; text-decoration: none; border: 1px solid #333; padding: 4px 10px; border-radius: 4px; transition: all 0.2s;">🔒 অ্যাডমিন প্যানেল</a></div>
+          <p style="color: #ccc; font-size: 14px;">বাংলাদেশের সবচেয়ে বড় এবং বিশ্বস্ত ডিজিটাল ইয়েলো পেজেস এবং ডিরেক্টরি। আপনার প্রয়োজনীয় সব ব্যবসা এক ঠিকানায়।</p>\n          <div style="margin-top: 15px;"><a href="../auth/admin-login.html" style="color: #777; font-size: 13px; text-decoration: none; border: 1px solid #333; padding: 4px 10px; border-radius: 4px; transition: all 0.2s;">🔒 অ্যাডমিন প্যানেল</a></div>
         </div>
         <div style="text-align: center;">
           <h4>বিভাগসমূহ</h4>
           <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 15px;">
-            <li><a href="listings.html?div=ঢাকা">ঢাকা</a></li>
-            <li><a href="listings.html?div=বরিশাল">বরিশাল</a></li>
-            <li><a href="listings.html?div=চট্টগ্রাম">চট্টগ্রাম</a></li>
-            <li><a href="listings.html?div=সিলেট">সিলেট</a></li>
-            <li><a href="listings.html?div=রাজশাহী">রাজশাহী</a></li>
-            <li><a href="listings.html?div=রংপুর">রংপুর</a></li>
-            <li><a href="listings.html?div=খুলনা">খুলনা</a></li>
-            <li><a href="listings.html?div=ময়মনসিংহ">ময়মনসিংহ</a></li>
+            <li><a href="../listings/listings.html?div=ঢাকা">ঢাকা</a></li>
+            <li><a href="../listings/listings.html?div=বরিশাল">বরিশাল</a></li>
+            <li><a href="../listings/listings.html?div=চট্টগ্রাম">চট্টগ্রাম</a></li>
+            <li><a href="../listings/listings.html?div=সিলেট">সিলেট</a></li>
+            <li><a href="../listings/listings.html?div=রাজশাহী">রাজশাহী</a></li>
+            <li><a href="../listings/listings.html?div=রংপুর">রংপুর</a></li>
+            <li><a href="../listings/listings.html?div=খুলনা">খুলনা</a></li>
+            <li><a href="../listings/listings.html?div=ময়মনসিংহ">ময়মনসিংহ</a></li>
           </ul>
         </div>
         <div style="text-align: center;">
           <h4>জনপ্রিয় ক্যাটাগরি</h4>
           <ul>
-            <li><a href="food.html">অন্ন (খাবার)</a></li>
-            <li><a href="listings.html?cat=ফ্যাশন">বস্ত্র (ফ্যাশন)</a></li>
-            <li><a href="accommodation.html">বাসস্থান (আবাসন)</a></li>
-            <li><a href="education.html">শিক্ষা</a></li>
-            <li><a href="health.html">চিকিৎসা (স্বাস্থ্য)</a></li>
+            <li><a href="../categories/food.html">অন্ন (খাবার)</a></li>
+            <li><a href="../listings/listings.html?cat=ফ্যাশন">বস্ত্র (ফ্যাশন)</a></li>
+            <li><a href="../categories/accommodation.html">বাসস্থান (আবাসন)</a></li>
+            <li><a href="../categories/education.html">শিক্ষা</a></li>
+            <li><a href="../categories/health.html">চিকিৎসা (স্বাস্থ্য)</a></li>
           </ul>
         </div>
         <div style="text-align: center;">
           <h4>সহায়তা</h4>
           <ul>
-            <li><a href="contact.html">যোগাযোগ করুন</a></li>
-            <li><a href="privacy.html">প্রাইভেসি পলিসি</a></li>
-            <li><a href="terms.html">টার্মস অফ সার্ভিস</a></li>
-            <li><a href="faq.html">সচরাচর জিজ্ঞাসা</a></li>
-            <li><a href="blog.html">ব্লগ (Blog)</a></li>
+            <li><a href="../info/contact.html">যোগাযোগ করুন</a></li>
+            <li><a href="../info/privacy.html">প্রাইভেসি পলিসি</a></li>
+            <li><a href="../info/terms.html">টার্মস অফ সার্ভিস</a></li>
+            <li><a href="../info/faq.html">সচরাচর জিজ্ঞাসা</a></li>
+            <li><a href="../info/blog.html">ব্লগ (Blog)</a></li>
           </ul>
         </div>
       </div>
@@ -648,8 +425,8 @@
     </div>
   </footer>
 
-  <script src="js/data.js?v=1775204587481"></script>
-  <script src="js/main.js?v=1775204587481"></script>
+  <script src="../js/data.js?v=1775204587481"></script>
+  <script src="../js/main.js?v=1775204587481"></script>
   <script>
     // Modal Functions
     function openCategoryModal(title, icon, desc, link) {
@@ -746,3 +523,5 @@
   </script>
 </body>
 </html>
+
+

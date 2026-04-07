@@ -49,7 +49,13 @@ const Auth = {
     // 4. Logout user
     logout: function() {
         localStorage.removeItem('bb_session');
-        window.location.href = 'login.html';
+        const isSubfolder = window.location.pathname.includes('/auth/') || 
+                           window.location.pathname.includes('/dashboard/') ||
+                           window.location.pathname.includes('/listings/') ||
+                           window.location.pathname.includes('/categories/') ||
+                           window.location.pathname.includes('/info/');
+        const prefix = isSubfolder ? '../' : '';
+        window.location.href = prefix + 'auth/login.html';
     },
 
     // 5. Update Navbar based on Auth State
@@ -58,10 +64,17 @@ const Auth = {
         const topbarLinks = document.querySelector('.topbar-links');
         const headerNav = document.querySelector('.header-nav');
 
+        const isSubfolder = window.location.pathname.includes('/auth/') || 
+                           window.location.pathname.includes('/dashboard/') ||
+                           window.location.pathname.includes('/listings/') ||
+                           window.location.pathname.includes('/categories/') ||
+                           window.location.pathname.includes('/info/');
+        const prefix = isSubfolder ? '../' : '';
+
         if (session && topbarLinks) {
             topbarLinks.innerHTML = `
                 <span>স্বাগতম, <b>${session.name}</b></span> | 
-                <a href="user-dashboard.html" style="font-weight:700; color:var(--yp2);">ড্যাশবোর্ড</a> | 
+                <a href="${prefix}dashboard/user-dashboard.html" style="font-weight:700; color:var(--yp2);">ড্যাশবোর্ড</a> | 
                 <a href="#" onclick="Auth.logout()">লগআউট</a>
             `;
         }
@@ -69,17 +82,22 @@ const Auth = {
         // Redirect "Add Listing" button to login if not authenticated
         const addBtn = document.querySelector('.btn-add');
         if (addBtn && !session) {
-            addBtn.href = 'login.html?redirect=add-listing.html';
+            addBtn.href = `${prefix}auth/login.html?redirect=listings/add-listing.html`;
         } else if (addBtn) {
-            addBtn.href = 'add-listing.html';
+            addBtn.href = `${prefix}listings/add-listing.html`;
         }
     },
 
     // 6. Protect individual pages
     protectPage: function() {
         if (!this.getSession()) {
+            const isSubfolder = window.location.pathname.includes('/dashboard/') ||
+                               window.location.pathname.includes('/listings/');
+            const prefix = isSubfolder ? '../' : '';
             const currentPath = window.location.pathname.split('/').pop();
-            window.location.href = `login.html?redirect=${currentPath}`;
+            const folder = window.location.pathname.split('/').slice(-2, -1)[0];
+            const redirectPath = (folder && folder !== 'last') ? `${folder}/${currentPath}` : currentPath;
+            window.location.href = `${prefix}auth/login.html?redirect=${redirectPath}`;
         }
     }
 };

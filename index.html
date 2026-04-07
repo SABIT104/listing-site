@@ -279,7 +279,7 @@
     <div class="container">
       <div>🇧🇩 বাংলাদেশের বৃহত্তম বিজনেস ডিরেক্টরি</div>
       <div class="topbar-links">
-        <a href="login.html">লগইন</a> | <a href="register.html">রেজিস্ট্রেশন</a> | <a href="faq.html">সাহায্য</a>
+        <a href="auth/login.html">লগইন</a> | <a href="auth/register.html">রেজিস্ট্রেশন</a> | <a href="info/faq.html">সাহায্য</a>
       </div>
     </div>
   </div>
@@ -314,9 +314,9 @@
       </div>
 
       <div class="header-nav">
-        <a href="listings.html">ক্যাটাগরি</a>
-        <a href="map.html">ম্যাপ</a>
-        <a href="add-listing.html" class="btn-add">+ বিজ্ঞাপন দিন</a>
+        <a href="listings/listings.html">ক্যাটাগরি</a>
+        <a href="listings/map.html">ম্যাপ</a>
+        <a href="listings/add-listing.html" class="btn-add">+ বিজ্ঞাপন দিন</a>
       </div>
     </div>
   </header>
@@ -324,16 +324,16 @@
   <!-- PART 3: CATEGORY TAB STRIP -->
   <div class="cat-strip">
     <div class="container">
-      <a href="listings.html" class="cat-tab">🌐 সব ধরন</a>
-      <a href="food.html" class="cat-tab">🍛 খাবার</a>
-      <a href="health.html" class="cat-tab">🏥 স্বাস্থ্য</a>
-      <a href="education.html" class="cat-tab">📚 শিক্ষা</a>
-      <a href="small-business.html" class="cat-tab">🛍 ছোট ব্যবসা</a>
-      <a href="freelancing.html" class="cat-tab">💻 ফ্রিল্যান্সিং</a>
-      <a href="company.html" class="cat-tab">🏢 কোম্পানি</a>
-      <a href="it.html" class="cat-tab">⚙️ আইটি</a>
-      <a href="transport.html" class="cat-tab">🚌 পরিবহন</a>
-      <a href="accommodation.html" class="cat-tab">🏠 আবাসন</a>
+      <a href="listings/listings.html" class="cat-tab">🌐 সব ধরন</a>
+      <a href="categories/food.html" class="cat-tab">🍛 খাবার</a>
+      <a href="categories/health.html" class="cat-tab">🏥 স্বাস্থ্য</a>
+      <a href="categories/education.html" class="cat-tab">📚 শিক্ষা</a>
+      <a href="categories/small-business.html" class="cat-tab">🛍 ছোট ব্যবসা</a>
+      <a href="categories/freelancing.html" class="cat-tab">💻 ফ্রিল্যান্সিং</a>
+      <a href="categories/company.html" class="cat-tab">🏢 কোম্পানি</a>
+      <a href="categories/it.html" class="cat-tab">⚙️ আইটি</a>
+      <a href="categories/transport.html" class="cat-tab">🚌 পরিবহন</a>
+      <a href="categories/accommodation.html" class="cat-tab">🏠 আবাসন</a>
       <a href="#" class="cat-tab">👗 ফ্যাশন</a>
       <a href="#" class="cat-tab">🌾 কৃষি</a>
     </div>
@@ -373,7 +373,7 @@
             <option value="রংপুর">রংপুর</option>
             <option value="ময়মনসিংহ">ময়মনসিংহ</option>
           </select>
-          <button onclick="window.location.href='listings.html?q=' + document.getElementById('heroSearchInput').value">খুঁজুন</button>
+          <button onclick="window.location.href='listings/listings.html?q=' + document.getElementById('heroSearchInput').value">খুঁজুন</button>
         </div>
 
         <div class="hero-stats">
@@ -388,84 +388,84 @@
     <div class="container">
       <h2 class="section-title">পপুলার ক্যাটাগরি</h2>
       <div class="cat-grid" id="catGrid">
-        <div class="cat-card" onclick="window.location.href='food.html'">
+        <div class="cat-card" onclick="window.location.href='categories/food.html'">
           <div class="cat-icon-col"><span class="icon">🍛</span></div>
           <div class="cat-text-col">
             <h3 class="name">খাবার</h3>
             <p class="desc">আপনার লোকেশনের সেরা খাবার এক্সপ্লোর করুন</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='health.html'">
+        <div class="cat-card" onclick="window.location.href='categories/health.html'">
           <div class="cat-icon-col"><span class="icon">🏥</span></div>
           <div class="cat-text-col">
             <h3 class="name">স্বাস্থ্য</h3>
             <p class="desc">সেইফ চিকিৎসা আপনার কাছের লোকেশনে</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='education.html'">
+        <div class="cat-card" onclick="window.location.href='categories/education.html'">
           <div class="cat-icon-col"><span class="icon">📚</span></div>
           <div class="cat-text-col">
             <h3 class="name">শিক্ষা</h3>
             <p class="desc">সেরা শিক্ষাপ্রতিষ্ঠান ও নির্ভরযোগ্য কোর্স খুঁজুন</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='listings.html?cat=শপিং'">
+        <div class="cat-card" onclick="window.location.href='listings/listings.html?cat=শপিং'">
           <div class="cat-icon-col"><span class="icon">🛍</span></div>
           <div class="cat-text-col">
             <h3 class="name">শপিং</h3>
             <p class="desc">আপনার পছন্দের ব্র্যান্ড ও ট্রেন্ডি কালেকশন</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='it.html'">
+        <div class="cat-card" onclick="window.location.href='categories/it.html'">
           <div class="cat-icon-col"><span class="icon">⚙️</span></div>
           <div class="cat-text-col">
             <h3 class="name">আইটি</h3>
             <p class="desc">বিশ্বস্ত আইটি সলিউশন ও টেক সার্ভিস</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='transport.html'">
+        <div class="cat-card" onclick="window.location.href='categories/transport.html'">
           <div class="cat-icon-col"><span class="icon">🚌</span></div>
           <div class="cat-text-col">
             <h3 class="name">পরিবহন</h3>
             <p class="desc">নিরাপদ ও দ্রুত যোগাযোগ এবং পরিবহন সেবা</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='accommodation.html'">
+        <div class="cat-card" onclick="window.location.href='categories/accommodation.html'">
           <div class="cat-icon-col"><span class="icon">🏠</span></div>
           <div class="cat-text-col">
             <h3 class="name">আবাসন</h3>
             <p class="desc">আরামদায়ক আবাসিক হোটেল ও সেরা ফ্ল্যাট সমূহ</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='listings.html?cat=ফ্যাশন'">
+        <div class="cat-card" onclick="window.location.href='listings/listings.html?cat=ফ্যাশন'">
           <div class="cat-icon-col"><span class="icon">👗</span></div>
           <div class="cat-text-col">
             <h3 class="name">ফ্যাশন</h3>
             <p class="desc">আধুনিক ও স্টাইলিশ পোশাকের সন্ধান</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='listings.html?cat=কৃষি'">
+        <div class="cat-card" onclick="window.location.href='listings/listings.html?cat=কৃষি'">
           <div class="cat-icon-col"><span class="icon">🌾</span></div>
           <div class="cat-text-col">
             <h3 class="name">কৃষি</h3>
             <p class="desc">সেরা মানের কৃষি উপকরণ ও প্রয়োজনীয় সেবা</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='company.html'">
+        <div class="cat-card" onclick="window.location.href='categories/company.html'">
           <div class="cat-icon-col"><span class="icon">🏢</span></div>
           <div class="cat-text-col">
             <h3 class="name">কোম্পানি</h3>
             <p class="desc">শীর্ষস্থানীয় কোম্পানি ও কর্পোরেট অফিসের খোঁজ</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='freelancing.html'">
+        <div class="cat-card" onclick="window.location.href='categories/freelancing.html'">
           <div class="cat-icon-col"><span class="icon">💻</span></div>
           <div class="cat-text-col">
             <h3 class="name">ফ্রিল্যান্সিং</h3>
             <p class="desc">পপুলার ফ্রিল্যান্সিং সাপোর্ট ও আইটি ট্রেনিং</p>
           </div>
         </div>
-        <div class="cat-card" onclick="window.location.href='small-business.html'">
+        <div class="cat-card" onclick="window.location.href='categories/small-business.html'">
           <div class="cat-icon-col"><span class="icon">🛒</span></div>
           <div class="cat-text-col">
             <h3 class="name">ছোট ব্যবসা</h3>
@@ -482,7 +482,7 @@
       <div class="cta-banner">
         <h2>আপনার বিজনেস লিস্ট করুন</h2>
         <p>হাজারো কাস্টমার আপনার ব্যবসার জন্য অপেক্ষা করছে। ফ্রি-তে অ্যাকাউন্ট তৈরি করুন এবং বিজ্ঞাপন দিন।</p>
-        <a href="add-listing.html" class="btn-gold">বিনামূল্যে শুরু করুন →</a>
+        <a href="listings/add-listing.html" class="btn-gold">বিনামূল্যে শুরু করুন →</a>
       </div>
     </div>
     
@@ -509,39 +509,39 @@
               <span style="color:#ccc;">BusinessBangla.com.bd</span>
             </div>
           </a>
-          <p style="color: #ccc; font-size: 14px;">বাংলাদেশের সবচেয়ে বড় এবং বিশ্বস্ত ডিজিটাল ইয়েলো পেজেস এবং ডিরেক্টরি। আপনার প্রয়োজনীয় সব ব্যবসা এক ঠিকানায়।</p>\n          <div style="margin-top: 15px;"><a href="admin-login.html" style="color: #777; font-size: 13px; text-decoration: none; border: 1px solid #333; padding: 4px 10px; border-radius: 4px; transition: all 0.2s;">🔒 অ্যাডমিন প্যানেল</a></div>
+          <p style="color: #ccc; font-size: 14px;">বাংলাদেশের সবচেয়ে বড় and বিশ্বস্ত ডিজিটাল ইয়েলো পেজেস এবং ডিরেক্টরি। আপনার প্রয়োজনীয় সব ব্যবসা এক ঠিকানায়।</p>\n          <div style="margin-top: 15px;"><a href="auth/admin-login.html" style="color: #777; font-size: 13px; text-decoration: none; border: 1px solid #333; padding: 4px 10px; border-radius: 4px; transition: all 0.2s;">🔒 অ্যাডমিন প্যানেল</a></div>
         </div>
         <div style="text-align: center;">
           <h4>বিভাগসমূহ</h4>
           <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 15px;">
-            <li><a href="listings.html?div=ঢাকা">ঢাকা</a></li>
-            <li><a href="listings.html?div=বরিশাল">বরিশাল</a></li>
-            <li><a href="listings.html?div=চট্টগ্রাম">চট্টগ্রাম</a></li>
-            <li><a href="listings.html?div=সিলেট">সিলেট</a></li>
-            <li><a href="listings.html?div=রাজশাহী">রাজশাহী</a></li>
-            <li><a href="listings.html?div=রংপুর">রংপুর</a></li>
-            <li><a href="listings.html?div=খুলনা">খুলনা</a></li>
-            <li><a href="listings.html?div=ময়মনসিংহ">ময়মনসিংহ</a></li>
+            <li><a href="listings/listings.html?div=ঢাকা">ঢাকা</a></li>
+            <li><a href="listings/listings.html?div=বরিশাল">বরিশাল</a></li>
+            <li><a href="listings/listings.html?div=চট্টগ্রাম">চট্টগ্রাম</a></li>
+            <li><a href="listings/listings.html?div=সিলেট">সিলেট</a></li>
+            <li><a href="listings/listings.html?div=রাজশাহী">রাজশাহী</a></li>
+            <li><a href="listings/listings.html?div=রংপুর">রংপুর</a></li>
+            <li><a href="listings/listings.html?div=খুলনা">খুলনা</a></li>
+            <li><a href="listings/listings.html?div=ময়মনসিংহ">ময়মনসিংহ</a></li>
           </ul>
         </div>
         <div style="text-align: center;">
           <h4>জনপ্রিয় ক্যাটাগরি</h4>
           <ul>
-            <li><a href="food.html">অন্ন (খাবার)</a></li>
-            <li><a href="listings.html?cat=ফ্যাশন">বস্ত্র (ফ্যাশন)</a></li>
-            <li><a href="accommodation.html">বাসস্থান (আবাসন)</a></li>
-            <li><a href="education.html">শিক্ষা</a></li>
-            <li><a href="health.html">চিকিৎসা (স্বাস্থ্য)</a></li>
+            <li><a href="categories/food.html">অন্ন (খাবার)</a></li>
+            <li><a href="listings/listings.html?cat=ফ্যাশন">বস্ত্র (ফ্যাশন)</a></li>
+            <li><a href="categories/accommodation.html">বাসস্থান (আবাসন)</a></li>
+            <li><a href="categories/education.html">শিক্ষা</a></li>
+            <li><a href="categories/health.html">চিকিৎসা (স্বাস্থ্য)</a></li>
           </ul>
         </div>
         <div style="text-align: center;">
           <h4>সহায়তা</h4>
           <ul>
-            <li><a href="contact.html">যোগাযোগ করুন</a></li>
-            <li><a href="privacy.html">প্রাইভেসি পলিসি</a></li>
-            <li><a href="terms.html">টার্মস অফ সার্ভিস</a></li>
-            <li><a href="faq.html">সচরাচর জিজ্ঞাসা</a></li>
-            <li><a href="blog.html">ব্লগ (Blog)</a></li>
+            <li><a href="info/contact.html">যোগাযোগ করুন</a></li>
+            <li><a href="info/privacy.html">প্রাইভেসি পলিসি</a></li>
+            <li><a href="info/terms.html">টার্মস অফ সার্ভিস</a></li>
+            <li><a href="info/faq.html">সচরাচর জিজ্ঞাসা</a></li>
+            <li><a href="info/blog.html">ব্লগ (Blog)</a></li>
           </ul>
         </div>
       </div>
@@ -610,7 +610,7 @@
           <div class="ft-card">
             <div class="ft-header">
               <span style="font-size: 24px;">${item.icon}</span>
-              <h3><a href="business.html?id=${item.id}">${item.name}</a></h3>
+              <h3><a href="listings/business.html?id=${item.id}">${item.name}</a></h3>
             </div>
             <div class="ft-body">
               <div style="margin-bottom: 5px;">📍 ${item.area}, ${item.district}</div>

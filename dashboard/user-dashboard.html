@@ -6,7 +6,7 @@
     <title>ইউজার ড্যাশবোর্ড - BusinessBangla</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="../css/variables.css">
     
     <style>
         :root {
@@ -208,7 +208,7 @@
                 <h2 id="userName">স্বাগতম!</h2>
                 <p>আপনার বিজনেস ড্যাশবোর্ডে সব আপডেট এখানে পাবেন</p>
             </div>
-            <a href="add-listing.html" class="btn-add">+ নতুন বিজ্ঞাপন দিন</a>
+            <a href="../listings/add-listing.html" class="btn-add">+ নতুন বিজ্ঞাপন দিন</a>
         </div>
 
         <!-- Stats -->
@@ -261,7 +261,7 @@
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <script src="../js/auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             Auth.protectPage();
@@ -286,7 +286,7 @@
                 container.innerHTML = `
                     <div class="empty-state">
                         <div>📁</div>
-                        <p>এখনও কোনো লিস্টিং যোগ করা হয়নি। <a href="add-listing.html">নতুন বিজ্ঞাপন দিন</a></p>
+                        <p>এখনও কোনো লিস্টিং যোগ করা হয়নি। <a href="../listings/add-listing.html">নতুন বিজ্ঞাপন দিন</a></p>
                     </div>
                 `;
                 return;
@@ -389,3 +389,5 @@
     </script>
 </body>
 </html>
+
+
