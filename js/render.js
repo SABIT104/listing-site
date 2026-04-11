@@ -55,7 +55,7 @@ function renderListings(arr, containerId = 'listingList') {
         <!-- MIDDLE -->
         <div class="item-middle">
           <h3 class="biz-name" style="margin-bottom:8px; display:flex; align-items:center; gap:8px;">
-            <a href="business.html?id=${item._id || item.id}" style="color:#000; font-size:20px;">${item.name}</a>
+            <a href="/listings/business.html?id=${item._id || item.id}" style="color:#000; font-size:20px;">${item.name}</a>
             ${badgeHtml}
           </h3>
           <div class="biz-cat-loc" style="font-size:13px; color:var(--mid); margin-bottom:8px;">
@@ -85,8 +85,8 @@ function renderListings(arr, containerId = 'listingList') {
             📞 ফোন করুন
           </button>
           <div class="phone-text" style="font-weight:700; font-size:14px; color:#000; margin-bottom:5px;">${item.phone}</div>
-          ${item.web ? `<button class="btn-web" onclick="window.open('http://${item.web}', '_blank')" style="background:#fff; border:1px solid var(--border); color:#2196F3; width:100%; padding:8px; border-radius:var(--radius); text-align:center;">🌐 ওয়েবসাইট</button>` : ''}
-          <a href="business.html?id=${item._id || item.id}" class="btn-details" style="display:block; background:#fff; border:1px solid var(--border); color:var(--muted); width:100%; padding:8px; border-radius:var(--radius); text-align:center; font-size:13px; text-decoration:none;">বিস্তারিত দেখুন</a>
+          ${item.web ? `<button class="btn-web" onclick="window.open('http://${item.web}', '_blank')" style="background:#fff; border:1px solid var(--border); color:#2196F3; width:100%; padding:8px; border-radius:var(--radius); text-align:center; cursor:pointer;">🌐 ওয়েবসাইট</button>` : ''}
+          <a href="/listings/business.html?id=${item._id || item.id}" class="btn-details" style="display:block; background:#fff; border:1px solid var(--border); color:var(--muted); width:100%; padding:8px; border-radius:var(--radius); text-align:center; font-size:13px; text-decoration:none;">বিস্তারিত দেখুন</a>
         </div>
       </div>
     `;

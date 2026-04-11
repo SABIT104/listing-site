@@ -38,7 +38,7 @@ function readDB() {
       { _id: 'cat3', name: 'শিক্ষা', icon: '📚' }
     ];
     if (!db.reviews) db.reviews = [];
-    if (!db.settings) db.settings = { siteTitle: 'BusinessBangla.com.bd', contactEmail: 'info@businessbangla.com.bd' };
+    if (!db.settings) db.settings = { siteTitle: 'businesbangla.site', contactEmail: 'info@businesbangla.site' };
     if (!db.notifications) db.notifications = [
       { _id: 'notif1', type: 'system', text: 'সার্ভার সফলভাবে চালু হয়েছে।', time: new Date().toISOString(), unread: true }
     ];

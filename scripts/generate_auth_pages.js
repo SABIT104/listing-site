@@ -194,7 +194,7 @@ const loginContent = `
       <div class="auth-card">
         <div class="auth-header">
           <h2>স্বাগতম!</h2>
-          <p>আপনার বিজনেসবাংলা অ্যাকাউন্টে লগইন করুন</p>
+          <p>আপনার বিজনেস বাংলা অ্যাকাউন্টে লগইন করুন</p>
         </div>
         
         <form>

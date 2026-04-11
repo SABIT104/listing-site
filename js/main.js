@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const doSearch = () => {
     const q = headerSearchInput.value.trim();
     const d = headerDivSelect.value;
-    window.location.href = `listings.html?q=${encodeURIComponent(q)}&div=${encodeURIComponent(d)}`;
+    window.location.href = `/listings/listings.html?q=${encodeURIComponent(q)}&div=${encodeURIComponent(d)}`;
   };
 
   if (headerSearchBtn) {

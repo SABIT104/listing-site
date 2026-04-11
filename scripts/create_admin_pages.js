@@ -166,7 +166,7 @@ const dashboardFullHTML = `
   <!-- Sidebar -->
   <div class="admin-sidebar">
     <div class="admin-logo">
-      <h2>বিজনেসবাংলা</h2>
+      <h2>বিজনেস বাংলা</h2>
       <span style="font-size: 12px; opacity:0.7;">Admin Workspace</span>
     </div>
     <ul class="admin-menu">
