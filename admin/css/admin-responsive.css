@@ -1,0 +1,14 @@
+@media (max-width: 768px) {
+  .sidebar {
+    width: 70px;
+  }
+  .sidebar-logo-text, .nav-section, .nav-item span, .badge-count, .admin-info {
+    display: none;
+  }
+  .main-area {
+    margin-left: 70px;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

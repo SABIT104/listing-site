@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - BusinessBangla</title>
+    <link rel="stylesheet" href="css/admin-variables.css">
+    <link rel="stylesheet" href="css/admin-base.css">
+    <link rel="stylesheet" href="css/admin-components.css">
+    <link rel="stylesheet" href="css/admin-forms.css">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--sidebar-bg); }
+        .login-card { background: #fff; padding: 40px; border-radius: 10px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .login-logo { text-align: center; margin-bottom: 30px; font-size: 1.5rem; font-weight: 700; color: #000; }
+        .login-logo span { color: var(--gold); }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-logo">Business<span>Bangla</span> Admin</div>
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label>ইমেইল বা ইউজারনেম</label>
+                <input type="text" id="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>পাসওয়ার্ড</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 12px; font-size: 1.1rem; margin-top: 10px;">লগইন করুন</button>
+        </form>
+    </div>
+    
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = 'অপেক্ষা করুন...';
+            btn.disabled = true;
+            
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.setItem('bb_admin_token', data.token || 'mock_admin_token_s@bit');
+                    window.location.href = 'pages/dashboard.html';
+                } else {
+                    alert(data.message || 'লগইন ব্যর্থ হয়েছে।');
+                }
+            } catch (err) {
+                alert('সার্ভার ত্রুটি!');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

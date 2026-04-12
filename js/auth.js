@@ -104,19 +104,22 @@ const Auth = {
     syncNavbar: function() {
         const session = this.getSession();
         const topbarLinks = document.querySelector('.topbar-links');
-        const headerNav = document.querySelector('.header-nav');
-
+        
         const isSubfolder = window.location.pathname.includes('/auth/') || 
                            window.location.pathname.includes('/dashboard/') ||
                            window.location.pathname.includes('/listings/') ||
+                           window.location.pathname.includes('/admin/') ||
                            window.location.pathname.includes('/categories/') ||
                            window.location.pathname.includes('/info/');
         const prefix = isSubfolder ? '../' : '';
 
         if (session && topbarLinks) {
+            const dashboardText = session.role === 'admin' ? 'অ্যাডমিন প্যানেল' : 'ড্যাশবোর্ড';
+            const dashboardLink = session.role === 'admin' ? `${prefix}admin/index.html` : `${prefix}dashboard/user-dashboard.html`;
+            
             topbarLinks.innerHTML = `
                 <span>স্বাগতম, <b>${session.name}</b></span> | 
-                <a href="${prefix}dashboard/user-dashboard.html" style="font-weight:700; color:var(--yp2);">ড্যাশবোর্ড</a> | 
+                <a href="${dashboardLink}" style="font-weight:700; color:var(--yp2);">${dashboardText}</a> | 
                 <a href="#" onclick="Auth.logout()">লগআউট</a>
             `;
         }
@@ -134,6 +137,7 @@ const Auth = {
     protectPage: function() {
         if (!this.getSession()) {
             const isSubfolder = window.location.pathname.includes('/dashboard/') ||
+                               window.location.pathname.includes('/admin/') ||
                                window.location.pathname.includes('/listings/');
             const prefix = isSubfolder ? '../' : '';
             const currentPath = window.location.pathname.split('/').pop();

@@ -17,6 +17,11 @@ const ListingSchema = new mongoose.Schema({
   premium: { type: Boolean, default: false },
   isLive: { type: Boolean, default: false },
   views: { type: Number, default: 0 },
+  seoTitle: { type: String },
+  seoDescription: { type: String },
+  ogImage: { type: String },
+  canonicalUrl: { type: String },
+  schemaMarkup: { type: Object },
   createdAt: { type: Date, default: Date.now }
 });
 

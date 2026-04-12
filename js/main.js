@@ -88,6 +88,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // --- Real-time Number Updating ---
+  function toBengaliNumeral(numStr) {
+    const toBnMap = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+    return numStr.toString().replace(/\d/g, d => toBnMap[d] || d);
+  }
+
   function updateDynamicCounts() {
     // 1. Topbar total listings
     const topbarRightSpan = document.querySelector('.topbar-left span:last-child');
@@ -315,9 +320,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (isHomePage) {
     // 1. Render Trusted Partners Slider
     const partnersTrack = document.getElementById('partnersTrack');
-    if (partnersTrack && LISTINGS.length > 0) {
-      const trusted = LISTINGS.filter(l => l.verified || l.premium || l.featured);
-      const partnerList = [...trusted, ...trusted]; // Duplicate for seamless scroll
+    if (partnersTrack) {
+      // Fetch verified/featured, but add some fallback popular brands to make it look 'full'
+      let trusted = LISTINGS.filter(l => l.verified || l.premium || l.featured);
+      
+      // If we don't have enough real data, add some popular mock brands
+      if (trusted.length < 10) {
+        const fallbacks = [
+          { name: 'Grameenphone', icon: '<img src="https://logo.clearbit.com/grameenphone.com" style="height:24px;width:auto;border-radius:4px;object-fit:contain;">' },
+          { name: 'Robi', icon: '<img src="https://logo.clearbit.com/robi.com.bd" style="height:24px;width:auto;border-radius:4px;object-fit:contain;">' },
+          { name: 'Banglalink', icon: '<img src="https://logo.clearbit.com/banglalink.net" style="height:24px;width:auto;border-radius:4px;object-fit:contain;">' },
+          { name: 'Square Group', icon: '<img src="https://logo.clearbit.com/squaregroup.com" style="height:24px;width:auto;border-radius:4px;object-fit:contain;">' },
+          { name: 'Bashundhara', icon: '<img src="https://logo.clearbit.com/bashundharagroup.com" style="height:24px;width:auto;border-radius:4px;object-fit:contain;">' },
+          { name: 'PRAN-RFL', icon: '<img src="https://logo.clearbit.com/pranfoods.net" style="height:24px;width:auto;border-radius:4px;object-fit:contain;">' },
+          { name: 'Akij Group', icon: '<img src="https://logo.clearbit.com/akij.net" style="height:24px;width:auto;border-radius:4px;object-fit:contain;">' },
+          { name: 'Beximco', icon: '<img src="https://logo.clearbit.com/beximco.com" style="height:24px;width:auto;border-radius:4px;object-fit:contain;">' }
+        ];
+        trusted = [...trusted, ...fallbacks];
+      }
+
+      // Ensure the 'trusted' array is long enough to span the screen width before final duplication
+      // This prevents the carousel from looping visibly if the screen is super wide
+      while(trusted.length < 15) {
+          trusted = [...trusted, ...trusted];
+      }
+
+      // Duplicate exactly twice for a seamless CSS scroll using translateX(-50%)
+      const partnerList = [...trusted, ...trusted]; 
       
       partnersTrack.innerHTML = partnerList.map(item => `
         <div class="partner-item" title="${item.name}">
@@ -325,18 +354,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           <span>${item.name}</span>
         </div>
       `).join('');
-
-      // Partners slider animation
-      let partnerPos = 0;
-      const stepPartners = () => {
-        partnerPos -= 0.5; // Speed
-        if (Math.abs(partnerPos) >= partnersTrack.scrollWidth / 2) {
-          partnerPos = 0;
-        }
-        partnersTrack.style.transform = `translateX(${partnerPos}px)`;
-        requestAnimationFrame(stepPartners);
-      };
-      stepPartners();
     }
 
     // 2. Render Latest Blogs

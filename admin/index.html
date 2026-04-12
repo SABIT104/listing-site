@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('bb_admin_token');
+            if (token) {
+                window.location.href = 'pages/dashboard.html';
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</head>
+<body>
+    <p>Redirecting to admin panel...</p>
+</body>
+</html>

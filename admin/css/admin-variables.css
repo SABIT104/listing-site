@@ -1,0 +1,39 @@
+:root {
+  /* Sidebar */
+  --sidebar-bg: #0F1923;
+  --sidebar-width: 200px;
+  --sidebar-text: rgba(255,255,255,0.65);
+  --sidebar-active-bg: rgba(255,255,255,0.08);
+  --sidebar-active-text: #ffffff;
+  --sidebar-active-border: #D4A017;
+  --sidebar-hover-bg: rgba(255,255,255,0.05);
+
+  /* Topbar */
+  --topbar-bg: #ffffff;
+  --topbar-height: 50px;
+  --topbar-border: #EBEBEB;
+
+  /* Content */
+  --content-bg: #F5F6FA;
+  --card-bg: #ffffff;
+  --card-border: #EBEBEB;
+  --card-radius: 10px;
+
+  /* Brand */
+  --gold: #D4A017;
+  --gold-dark: #B8860B;
+  --green: #1B6B3A;
+
+  /* Status colors */
+  --status-pending: #F59E0B;
+  --status-approved: #10B981;
+  --status-rejected: #EF4444;
+  --status-featured: #8B5CF6;
+  --status-premium: #0F1923;
+
+  /* Typography */
+  --font: 'Hind Siliguri', sans-serif;
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+}

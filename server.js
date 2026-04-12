@@ -526,6 +526,40 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
   }
 });
 
+// 14. SEO & Analytics Mocks
+app.get('/api/analytics/overview', (req, res) => {
+  res.json({ success: true, data: { visitors: 1200, pageViews: 3400, sessions: 1150 } });
+});
+app.get('/api/analytics/realtime', (req, res) => {
+  res.json({ success: true, activeUsers: Math.floor(Math.random() * 50) });
+});
+app.get('/api/analytics/top-pages', (req, res) => {
+  res.json({ success: true, pages: [{ url: '/', views: 1500 }, { url: '/listings', views: 800 }] });
+});
+app.get('/api/analytics/search-console', (req, res) => {
+  res.json({ success: true, queries: [{ keyword: 'business directory bd', clicks: 450 }] });
+});
+
+app.get('/api/seo/settings', (req, res) => {
+  const db = readDB();
+  res.json({ success: true, settings: db.seoSettings || {} });
+});
+app.put('/api/seo/settings', (req, res) => {
+  const db = readDB();
+  db.seoSettings = { ...(db.seoSettings || {}), ...req.body };
+  writeDB(db);
+  res.json({ success: true, settings: db.seoSettings });
+});
+app.post('/api/seo/generate-sitemap', (req, res) => {
+  res.json({ success: true, message: 'Sitemap generated', url: '/sitemap.xml' });
+});
+app.get('/api/seo/robots', (req, res) => {
+  res.json({ success: true, content: 'User-agent: *\\nAllow: /' });
+});
+app.put('/api/seo/robots', (req, res) => {
+  res.json({ success: true });
+});
+
 // ─── Serve Frontend ──────────────────────────────────────────────────────────
 
 app.use((req, res, next) => {
